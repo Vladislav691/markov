@@ -1,0 +1,12 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\botvl\\markov\\project1\\project1\\myform.cpp",
+        "ProvidedModule": "",
+        "Includes": [
+            "c:\\users\\botvl\\markov\\project1\\project1\\myform.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
