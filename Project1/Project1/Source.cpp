@@ -1,4 +1,5 @@
 #include "MyForm.h"
+#include <clocale>
 
 using namespace System;
 using namespace System::Windows::Forms;
@@ -6,6 +7,7 @@ using namespace System::Windows::Forms;
 [STAThread]
 int main()
 {
+    setlocale(LC_ALL, "Russian");
     Application::EnableVisualStyles();
     Application::SetCompatibleTextRenderingDefault(false);
 

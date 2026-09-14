@@ -4,7 +4,18 @@
         "Source": "c:\\users\\botvl\\markov\\project1\\project1\\source.cpp",
         "ProvidedModule": "",
         "Includes": [
-            "c:\\users\\botvl\\markov\\project1\\project1\\myform.h"
+            "c:\\users\\botvl\\markov\\project1\\project1\\myform.h",
+            "c:\\users\\botvl\\markov\\project1\\project1\\linearequation.h",
+            "c:\\users\\botvl\\markov\\project1\\project1\\quadraticequation.h",
+            "e:\\visual st26\\vc\\tools\\msvc\\14.51.36231\\include\\clocale",
+            "e:\\visual st26\\vc\\tools\\msvc\\14.51.36231\\include\\yvals_core.h",
+            "e:\\visual st26\\vc\\tools\\msvc\\14.51.36231\\include\\vcruntime.h",
+            "e:\\visual st26\\vc\\tools\\msvc\\14.51.36231\\include\\sal.h",
+            "e:\\visual st26\\vc\\tools\\msvc\\14.51.36231\\include\\concurrencysal.h",
+            "e:\\visual st26\\vc\\tools\\msvc\\14.51.36231\\include\\vadefs.h",
+            "e:\\visual st26\\vc\\tools\\msvc\\14.51.36231\\include\\xkeycheck.h",
+            "e:\\windows kits\\10\\include\\10.0.26100.0\\ucrt\\locale.h",
+            "e:\\windows kits\\10\\include\\10.0.26100.0\\ucrt\\corecrt.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

@@ -3,7 +3,10 @@
     "Data": {
         "Source": "c:\\users\\botvl\\markov\\project1\\project1\\myform.h",
         "ProvidedModule": "",
-        "Includes": [],
+        "Includes": [
+            "c:\\users\\botvl\\markov\\project1\\project1\\linearequation.h",
+            "c:\\users\\botvl\\markov\\project1\\project1\\quadraticequation.h"
+        ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []
     }
