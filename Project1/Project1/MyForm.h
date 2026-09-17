@@ -1,6 +1,11 @@
 #pragma once
 #include "LinearEquation.h"
 #include "QuadraticEquation.h"
+#include <iostream>
+#include <cmath>
+#include <complex>
+#include <vector>
+#include "CubeEquation.h"
 namespace Project1 {
 
 	using namespace System;
@@ -57,6 +62,17 @@ namespace Project1 {
 	private: System::Windows::Forms::TextBox^ textBoxQuadraticB;
 	private: System::Windows::Forms::Button^ buttonSolve;
 	private: System::Windows::Forms::Label^ labelResult;
+	private: System::Windows::Forms::Panel^ panelCube;
+	private: System::Windows::Forms::Label^ label11;
+	private: System::Windows::Forms::TextBox^ textBoxCubeA;
+	private: System::Windows::Forms::Label^ label8;
+	private: System::Windows::Forms::TextBox^ textBoxCubeB;
+	private: System::Windows::Forms::Label^ label9;
+	private: System::Windows::Forms::TextBox^ textBoxCubeD;
+	private: System::Windows::Forms::Label^ label10;
+	private: System::Windows::Forms::TextBox^ textBoxCubeC;
+	private: System::Windows::Forms::CheckBox^ checkBoxComplex;
+
 
 
 	protected:
@@ -91,8 +107,19 @@ namespace Project1 {
 			this->textBoxQuadraticB = (gcnew System::Windows::Forms::TextBox());
 			this->buttonSolve = (gcnew System::Windows::Forms::Button());
 			this->labelResult = (gcnew System::Windows::Forms::Label());
+			this->panelCube = (gcnew System::Windows::Forms::Panel());
+			this->label11 = (gcnew System::Windows::Forms::Label());
+			this->textBoxCubeA = (gcnew System::Windows::Forms::TextBox());
+			this->label8 = (gcnew System::Windows::Forms::Label());
+			this->textBoxCubeB = (gcnew System::Windows::Forms::TextBox());
+			this->label9 = (gcnew System::Windows::Forms::Label());
+			this->textBoxCubeD = (gcnew System::Windows::Forms::TextBox());
+			this->label10 = (gcnew System::Windows::Forms::Label());
+			this->textBoxCubeC = (gcnew System::Windows::Forms::TextBox());
+			this->checkBoxComplex = (gcnew System::Windows::Forms::CheckBox());
 			this->panelLinear->SuspendLayout();
 			this->panelQuadratic->SuspendLayout();
+			this->panelCube->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// label1
@@ -102,7 +129,7 @@ namespace Project1 {
 				static_cast<System::Byte>(204)));
 			this->label1->Location = System::Drawing::Point(53, 32);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(193, 16);
+			this->label1->Size = System::Drawing::Size(194, 16);
 			this->label1->TabIndex = 0;
 			this->label1->Text = L"Введите степень уравнения";
 			// 
@@ -123,7 +150,7 @@ namespace Project1 {
 				static_cast<System::Byte>(204)));
 			this->label2->Location = System::Drawing::Point(53, 87);
 			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(154, 16);
+			this->label2->Size = System::Drawing::Size(155, 16);
 			this->label2->TabIndex = 2;
 			this->label2->Text = L"Реши уравнение вида:";
 			// 
@@ -264,11 +291,112 @@ namespace Project1 {
 			this->labelResult->TabIndex = 6;
 			this->labelResult->Text = L"Результат: ";
 			// 
+			// panelCube
+			// 
+			this->panelCube->Controls->Add(this->label11);
+			this->panelCube->Controls->Add(this->textBoxCubeA);
+			this->panelCube->Controls->Add(this->label8);
+			this->panelCube->Controls->Add(this->textBoxCubeB);
+			this->panelCube->Controls->Add(this->label9);
+			this->panelCube->Controls->Add(this->textBoxCubeD);
+			this->panelCube->Controls->Add(this->label10);
+			this->panelCube->Controls->Add(this->textBoxCubeC);
+			this->panelCube->Location = System::Drawing::Point(54, 232);
+			this->panelCube->Name = L"panelCube";
+			this->panelCube->Size = System::Drawing::Size(355, 37);
+			this->panelCube->TabIndex = 10;
+			// 
+			// label11
+			// 
+			this->label11->AutoSize = true;
+			this->label11->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label11->Location = System::Drawing::Point(41, 14);
+			this->label11->Name = L"label11";
+			this->label11->Size = System::Drawing::Size(45, 20);
+			this->label11->TabIndex = 11;
+			this->label11->Text = L"x^3 +";
+			// 
+			// textBoxCubeA
+			// 
+			this->textBoxCubeA->Location = System::Drawing::Point(5, 14);
+			this->textBoxCubeA->Name = L"textBoxCubeA";
+			this->textBoxCubeA->Size = System::Drawing::Size(33, 20);
+			this->textBoxCubeA->TabIndex = 10;
+			// 
+			// label8
+			// 
+			this->label8->AutoSize = true;
+			this->label8->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label8->Location = System::Drawing::Point(128, 14);
+			this->label8->Name = L"label8";
+			this->label8->Size = System::Drawing::Size(45, 20);
+			this->label8->TabIndex = 9;
+			this->label8->Text = L"x^2 +";
+			// 
+			// textBoxCubeB
+			// 
+			this->textBoxCubeB->Location = System::Drawing::Point(92, 14);
+			this->textBoxCubeB->Name = L"textBoxCubeB";
+			this->textBoxCubeB->Size = System::Drawing::Size(33, 20);
+			this->textBoxCubeB->TabIndex = 8;
+			// 
+			// label9
+			// 
+			this->label9->AutoSize = true;
+			this->label9->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label9->Location = System::Drawing::Point(296, 14);
+			this->label9->Name = L"label9";
+			this->label9->Size = System::Drawing::Size(35, 20);
+			this->label9->TabIndex = 7;
+			this->label9->Text = L"=  0";
+			// 
+			// textBoxCubeD
+			// 
+			this->textBoxCubeD->Location = System::Drawing::Point(251, 14);
+			this->textBoxCubeD->Name = L"textBoxCubeD";
+			this->textBoxCubeD->Size = System::Drawing::Size(39, 20);
+			this->textBoxCubeD->TabIndex = 5;
+			// 
+			// label10
+			// 
+			this->label10->AutoSize = true;
+			this->label10->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label10->Location = System::Drawing::Point(222, 14);
+			this->label10->Name = L"label10";
+			this->label10->Size = System::Drawing::Size(29, 20);
+			this->label10->TabIndex = 6;
+			this->label10->Text = L"x +";
+			// 
+			// textBoxCubeC
+			// 
+			this->textBoxCubeC->Location = System::Drawing::Point(174, 14);
+			this->textBoxCubeC->Name = L"textBoxCubeC";
+			this->textBoxCubeC->Size = System::Drawing::Size(45, 20);
+			this->textBoxCubeC->TabIndex = 4;
+			// 
+			// checkBoxComplex
+			// 
+			this->checkBoxComplex->AutoSize = true;
+			this->checkBoxComplex->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->checkBoxComplex->Location = System::Drawing::Point(446, 32);
+			this->checkBoxComplex->Name = L"checkBoxComplex";
+			this->checkBoxComplex->Size = System::Drawing::Size(261, 20);
+			this->checkBoxComplex->TabIndex = 11;
+			this->checkBoxComplex->Text = L"Использование комплексных чисел";
+			this->checkBoxComplex->UseVisualStyleBackColor = true;
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(979, 539);
+			this->Controls->Add(this->checkBoxComplex);
+			this->Controls->Add(this->panelCube);
 			this->Controls->Add(this->labelResult);
 			this->Controls->Add(this->buttonSolve);
 			this->Controls->Add(this->panelQuadratic);
@@ -282,6 +410,8 @@ namespace Project1 {
 			this->panelLinear->PerformLayout();
 			this->panelQuadratic->ResumeLayout(false);
 			this->panelQuadratic->PerformLayout();
+			this->panelCube->ResumeLayout(false);
+			this->panelCube->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -298,6 +428,12 @@ namespace Project1 {
 		{
 			panelLinear->Visible = false;
 			panelQuadratic->Visible = true;
+		}
+		else if (comboBoxDegree->Text == "3")
+		{
+			panelLinear->Visible = false;
+			panelQuadratic->Visible = false;
+			panelCube->Visible = true;
 		}
 	}
 	private: System::Void buttonSolve_Click(System::Object^ sender, System::EventArgs^ e) 
@@ -320,6 +456,18 @@ namespace Project1 {
 				QuadraticEquation^ equation = gcnew QuadraticEquation(a, b, c);
 
 				labelResult->Text = equation->Solve();
+			}
+			else if (comboBoxDegree->Text == "3")
+			{
+				double a = Double::Parse(textBoxCubeA->Text);
+				double b = Double::Parse(textBoxCubeB->Text);
+				double c = Double::Parse(textBoxCubeC->Text);
+				double d = Double::Parse(textBoxCubeD->Text);
+
+				bool showComplex = checkBoxComplex->Checked;
+				CubeEquation^ equation = gcnew CubeEquation(a, b, c, d);
+
+				labelResult->Text = equation->Solve(checkBoxComplex->Checked);
 			}
 		}
 		catch (FormatException^)
