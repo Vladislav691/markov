@@ -423,11 +423,13 @@ namespace Project1 {
 		{
 			panelLinear->Visible = true;
 			panelQuadratic->Visible = false;
+			panelCube->Visible = false;
 		}
 		else if (comboBoxDegree->Text == "2")
 		{
 			panelLinear->Visible = false;
 			panelQuadratic->Visible = true;
+			panelCube->Visible = false;
 		}
 		else if (comboBoxDegree->Text == "3")
 		{

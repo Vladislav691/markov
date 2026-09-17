@@ -1,1 +1,6 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1217,5): error MSB3644: не найдены ссылочные сборки для .NETFramework,Version=v4.8. Чтобы устранить эту проблему, установите пакет разработчика (пакет SDK или пакет нацеливания) для этой версии платформы или перенацельте приложение. Пакеты разработчика для платформы .NET Framework можно скачать на странице https://aka.ms/msbuild/developerpacks.
+﻿  Source.cpp
+  .NETFramework,Version=v4.8.AssemblyAttributes.cpp
+  Создание кода...
+C:\Users\PGU\markov\Project1\Project1\QuadraticEquation.h(37): warning C4715: QuadraticEquation::Solve: значение возвращается не при всех путях выполнения
+  Source.obj : обнаружен модуль MSIL; для MSIL последовательная компоновка отключена; выполняется полная компоновка
+  Project1.vcxproj -> C:\Users\PGU\markov\Project1\Project1\Debug\Project1.exe

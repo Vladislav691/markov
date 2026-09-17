@@ -133,6 +133,7 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CubeEquation.h" />
     <ClInclude Include="LinearEquation.h" />
     <ClInclude Include="MyForm.h">
       <FileType>CppForm</FileType>
