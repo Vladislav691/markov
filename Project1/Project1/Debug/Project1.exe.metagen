@@ -25,7 +25,7 @@ Class QuadraticEquation: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
 Class CubeEquation: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
     Void .ctor(Double, Double, Double, Double): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
   Methods:
-    Solve(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig
+    Solve(): PrivateScope, Public, HideBySig
 Class Project1.MyForm: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
   :System.Windows.Forms.Form
     Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName

@@ -21,7 +21,9 @@ public:
 		double D = b * b - 4 * a * c;
 		if (D < 0)
 		{
-			return "Корней не существует";
+			double realPart = -b / (2 * a);
+			double imagPart = Math::Sqrt(-D) / (2 * Math::Abs(a));
+			return String::Format("x1 = {0} + {1}i; x2 = {0} - {1}i", realPart, imagPart);
 		}
 		if (D == 0)
 		{

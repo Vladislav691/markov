@@ -17,7 +17,7 @@ public:
 		this->c = c;
 		this->d = d;
 	}
-	String^ Solve(bool showComplex)
+	String^ Solve()
 	{
 		//проверка на корректность
 		if (abs(a) < 1e-9)
@@ -45,15 +45,8 @@ public:
 			double realPart23 = -0.5 * (u + v) - shift;
 			double imagPart = (u - v) * sqrt(3.0) / 2.0;
 			result += "x1 = " + realPart1.ToString("F6") + "\n";
-			if (showComplex)
-			{
-				result += "x2 = " + realPart23.ToString("F6") + " + " + abs(imagPart).ToString("F6") + "i\n";
-				result += "x3 = " + realPart23.ToString("F6") + " - " + abs(imagPart).ToString("F6") + "i\n";
-			}
-			else
-			{
-				result += "Комплексные корни скрыты настройками\n";
-			}
+			result += "x2 = " + realPart23.ToString("F6") + " + " + abs(imagPart).ToString("F6") + "i\n";
+			result += "x3 = " + realPart23.ToString("F6") + " - " + abs(imagPart).ToString("F6") + "i\n";
 		}
 		else
 		{

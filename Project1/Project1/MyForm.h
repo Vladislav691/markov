@@ -71,7 +71,7 @@ namespace Project1 {
 	private: System::Windows::Forms::TextBox^ textBoxCubeD;
 	private: System::Windows::Forms::Label^ label10;
 	private: System::Windows::Forms::TextBox^ textBoxCubeC;
-	private: System::Windows::Forms::CheckBox^ checkBoxComplex;
+
 
 
 
@@ -116,7 +116,6 @@ namespace Project1 {
 			this->textBoxCubeD = (gcnew System::Windows::Forms::TextBox());
 			this->label10 = (gcnew System::Windows::Forms::Label());
 			this->textBoxCubeC = (gcnew System::Windows::Forms::TextBox());
-			this->checkBoxComplex = (gcnew System::Windows::Forms::CheckBox());
 			this->panelLinear->SuspendLayout();
 			this->panelQuadratic->SuspendLayout();
 			this->panelCube->SuspendLayout();
@@ -378,24 +377,11 @@ namespace Project1 {
 			this->textBoxCubeC->Size = System::Drawing::Size(45, 20);
 			this->textBoxCubeC->TabIndex = 4;
 			// 
-			// checkBoxComplex
-			// 
-			this->checkBoxComplex->AutoSize = true;
-			this->checkBoxComplex->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->checkBoxComplex->Location = System::Drawing::Point(446, 32);
-			this->checkBoxComplex->Name = L"checkBoxComplex";
-			this->checkBoxComplex->Size = System::Drawing::Size(261, 20);
-			this->checkBoxComplex->TabIndex = 11;
-			this->checkBoxComplex->Text = L"Использование комплексных чисел";
-			this->checkBoxComplex->UseVisualStyleBackColor = true;
-			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(979, 539);
-			this->Controls->Add(this->checkBoxComplex);
 			this->Controls->Add(this->panelCube);
 			this->Controls->Add(this->labelResult);
 			this->Controls->Add(this->buttonSolve);
@@ -466,10 +452,9 @@ namespace Project1 {
 				double c = Double::Parse(textBoxCubeC->Text);
 				double d = Double::Parse(textBoxCubeD->Text);
 
-				bool showComplex = checkBoxComplex->Checked;
 				CubeEquation^ equation = gcnew CubeEquation(a, b, c, d);
 
-				labelResult->Text = equation->Solve(checkBoxComplex->Checked);
+				labelResult->Text = equation->Solve();
 			}
 		}
 		catch (FormatException^)
