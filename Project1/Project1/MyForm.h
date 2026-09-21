@@ -1,6 +1,7 @@
 #pragma once
 #include "LinearEquation.h"
 #include "QuadraticEquation.h"
+#include "QuarticEquation.h"
 #include <iostream>
 #include <cmath>
 #include <complex>
@@ -71,6 +72,17 @@ namespace Project1 {
 	private: System::Windows::Forms::TextBox^ textBoxCubeD;
 	private: System::Windows::Forms::Label^ label10;
 	private: System::Windows::Forms::TextBox^ textBoxCubeC;
+	private: System::Windows::Forms::Panel^ panelQuartic;
+	private: System::Windows::Forms::Label^ label16;
+	private: System::Windows::Forms::Label^ label12;
+	private: System::Windows::Forms::TextBox^ textBoxQuarticA;
+	private: System::Windows::Forms::TextBox^ textBoxQuarticB;
+	private: System::Windows::Forms::Label^ label13;
+	private: System::Windows::Forms::TextBox^ textBoxQuarticC;
+	private: System::Windows::Forms::Label^ label14;
+	private: System::Windows::Forms::TextBox^ textBoxQuarticE;
+	private: System::Windows::Forms::Label^ label15;
+	private: System::Windows::Forms::TextBox^ textBoxQuarticD;
 
 
 
@@ -116,9 +128,21 @@ namespace Project1 {
 			this->textBoxCubeD = (gcnew System::Windows::Forms::TextBox());
 			this->label10 = (gcnew System::Windows::Forms::Label());
 			this->textBoxCubeC = (gcnew System::Windows::Forms::TextBox());
+			this->panelQuartic = (gcnew System::Windows::Forms::Panel());
+			this->label12 = (gcnew System::Windows::Forms::Label());
+			this->textBoxQuarticB = (gcnew System::Windows::Forms::TextBox());
+			this->label13 = (gcnew System::Windows::Forms::Label());
+			this->textBoxQuarticC = (gcnew System::Windows::Forms::TextBox());
+			this->label14 = (gcnew System::Windows::Forms::Label());
+			this->textBoxQuarticE = (gcnew System::Windows::Forms::TextBox());
+			this->label15 = (gcnew System::Windows::Forms::Label());
+			this->textBoxQuarticD = (gcnew System::Windows::Forms::TextBox());
+			this->label16 = (gcnew System::Windows::Forms::Label());
+			this->textBoxQuarticA = (gcnew System::Windows::Forms::TextBox());
 			this->panelLinear->SuspendLayout();
 			this->panelQuadratic->SuspendLayout();
 			this->panelCube->SuspendLayout();
+			this->panelQuartic->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// label1
@@ -163,6 +187,7 @@ namespace Project1 {
 			this->panelLinear->Name = L"panelLinear";
 			this->panelLinear->Size = System::Drawing::Size(282, 34);
 			this->panelLinear->TabIndex = 3;
+			this->panelLinear->Visible = false;
 			// 
 			// label4
 			// 
@@ -212,6 +237,7 @@ namespace Project1 {
 			this->panelQuadratic->Name = L"panelQuadratic";
 			this->panelQuadratic->Size = System::Drawing::Size(282, 37);
 			this->panelQuadratic->TabIndex = 4;
+			this->panelQuadratic->Visible = false;
 			// 
 			// label7
 			// 
@@ -304,6 +330,7 @@ namespace Project1 {
 			this->panelCube->Name = L"panelCube";
 			this->panelCube->Size = System::Drawing::Size(355, 37);
 			this->panelCube->TabIndex = 10;
+			this->panelCube->Visible = false;
 			// 
 			// label11
 			// 
@@ -377,11 +404,120 @@ namespace Project1 {
 			this->textBoxCubeC->Size = System::Drawing::Size(45, 20);
 			this->textBoxCubeC->TabIndex = 4;
 			// 
+			// panelQuartic
+			// 
+			this->panelQuartic->Controls->Add(this->label16);
+			this->panelQuartic->Controls->Add(this->label12);
+			this->panelQuartic->Controls->Add(this->textBoxQuarticA);
+			this->panelQuartic->Controls->Add(this->textBoxQuarticB);
+			this->panelQuartic->Controls->Add(this->label13);
+			this->panelQuartic->Controls->Add(this->textBoxQuarticC);
+			this->panelQuartic->Controls->Add(this->label14);
+			this->panelQuartic->Controls->Add(this->textBoxQuarticE);
+			this->panelQuartic->Controls->Add(this->label15);
+			this->panelQuartic->Controls->Add(this->textBoxQuarticD);
+			this->panelQuartic->Location = System::Drawing::Point(54, 286);
+			this->panelQuartic->Name = L"panelQuartic";
+			this->panelQuartic->Size = System::Drawing::Size(438, 37);
+			this->panelQuartic->TabIndex = 12;
+			this->panelQuartic->Visible = false;
+			// 
+			// label12
+			// 
+			this->label12->AutoSize = true;
+			this->label12->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label12->Location = System::Drawing::Point(129, 14);
+			this->label12->Name = L"label12";
+			this->label12->Size = System::Drawing::Size(45, 20);
+			this->label12->TabIndex = 11;
+			this->label12->Text = L"x^3 +";
+			// 
+			// textBoxQuarticB
+			// 
+			this->textBoxQuarticB->Location = System::Drawing::Point(93, 14);
+			this->textBoxQuarticB->Name = L"textBoxQuarticB";
+			this->textBoxQuarticB->Size = System::Drawing::Size(33, 20);
+			this->textBoxQuarticB->TabIndex = 10;
+			// 
+			// label13
+			// 
+			this->label13->AutoSize = true;
+			this->label13->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label13->Location = System::Drawing::Point(216, 14);
+			this->label13->Name = L"label13";
+			this->label13->Size = System::Drawing::Size(45, 20);
+			this->label13->TabIndex = 9;
+			this->label13->Text = L"x^2 +";
+			// 
+			// textBoxQuarticC
+			// 
+			this->textBoxQuarticC->Location = System::Drawing::Point(180, 14);
+			this->textBoxQuarticC->Name = L"textBoxQuarticC";
+			this->textBoxQuarticC->Size = System::Drawing::Size(33, 20);
+			this->textBoxQuarticC->TabIndex = 8;
+			// 
+			// label14
+			// 
+			this->label14->AutoSize = true;
+			this->label14->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label14->Location = System::Drawing::Point(384, 14);
+			this->label14->Name = L"label14";
+			this->label14->Size = System::Drawing::Size(35, 20);
+			this->label14->TabIndex = 7;
+			this->label14->Text = L"=  0";
+			// 
+			// textBoxQuarticE
+			// 
+			this->textBoxQuarticE->Location = System::Drawing::Point(339, 14);
+			this->textBoxQuarticE->Name = L"textBoxQuarticE";
+			this->textBoxQuarticE->Size = System::Drawing::Size(39, 20);
+			this->textBoxQuarticE->TabIndex = 5;
+			// 
+			// label15
+			// 
+			this->label15->AutoSize = true;
+			this->label15->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label15->Location = System::Drawing::Point(310, 14);
+			this->label15->Name = L"label15";
+			this->label15->Size = System::Drawing::Size(29, 20);
+			this->label15->TabIndex = 6;
+			this->label15->Text = L"x +";
+			// 
+			// textBoxQuarticD
+			// 
+			this->textBoxQuarticD->Location = System::Drawing::Point(262, 14);
+			this->textBoxQuarticD->Name = L"textBoxQuarticD";
+			this->textBoxQuarticD->Size = System::Drawing::Size(45, 20);
+			this->textBoxQuarticD->TabIndex = 4;
+			// 
+			// label16
+			// 
+			this->label16->AutoSize = true;
+			this->label16->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label16->Location = System::Drawing::Point(41, 14);
+			this->label16->Name = L"label16";
+			this->label16->Size = System::Drawing::Size(45, 20);
+			this->label16->TabIndex = 13;
+			this->label16->Text = L"x^4 +";
+			// 
+			// textBoxQuarticA
+			// 
+			this->textBoxQuarticA->Location = System::Drawing::Point(5, 14);
+			this->textBoxQuarticA->Name = L"textBoxQuarticA";
+			this->textBoxQuarticA->Size = System::Drawing::Size(33, 20);
+			this->textBoxQuarticA->TabIndex = 12;
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(979, 539);
+			this->Controls->Add(this->panelQuartic);
 			this->Controls->Add(this->panelCube);
 			this->Controls->Add(this->labelResult);
 			this->Controls->Add(this->buttonSolve);
@@ -398,6 +534,8 @@ namespace Project1 {
 			this->panelQuadratic->PerformLayout();
 			this->panelCube->ResumeLayout(false);
 			this->panelCube->PerformLayout();
+			this->panelQuartic->ResumeLayout(false);
+			this->panelQuartic->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -408,20 +546,18 @@ namespace Project1 {
 		if (comboBoxDegree->Text == "1")
 		{
 			panelLinear->Visible = true;
-			panelQuadratic->Visible = false;
-			panelCube->Visible = false;
 		}
 		else if (comboBoxDegree->Text == "2")
 		{
-			panelLinear->Visible = false;
 			panelQuadratic->Visible = true;
-			panelCube->Visible = false;
 		}
 		else if (comboBoxDegree->Text == "3")
 		{
-			panelLinear->Visible = false;
-			panelQuadratic->Visible = false;
 			panelCube->Visible = true;
+		}
+		else if (comboBoxDegree->Text == "4")
+		{
+			panelQuartic->Visible = true;
 		}
 	}
 	private: System::Void buttonSolve_Click(System::Object^ sender, System::EventArgs^ e) 
@@ -455,6 +591,18 @@ namespace Project1 {
 				CubeEquation^ equation = gcnew CubeEquation(a, b, c, d);
 
 				labelResult->Text = equation->Solve();
+			}
+			else if (comboBoxDegree->Text == "4")
+			{
+				double a = Double::Parse(textBoxQuarticA->Text);
+				double b = Double::Parse(textBoxQuarticB->Text);
+				double c = Double::Parse(textBoxQuarticC->Text);
+				double d = Double::Parse(textBoxQuarticD->Text);
+				double e = Double::Parse(textBoxQuarticE->Text);
+
+				QuarticEquation^ equation = gcnew QuarticEquation();
+
+				labelResult->Text = equation->solveQuarticFerrari(a, b, c, d, e);
 			}
 		}
 		catch (FormatException^)

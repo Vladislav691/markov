@@ -126,6 +126,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Messaging" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -139,6 +140,7 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="QuadraticEquation.h" />
+    <ClInclude Include="QuarticEquation.h" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MyForm.resx">
