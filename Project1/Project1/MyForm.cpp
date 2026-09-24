@@ -142,15 +142,11 @@ namespace Project1
 	void MyForm::InitializeGraphPanel()
 	{
 		graphPanel = gcnew PolynomialSolver::UI::GraphPanel();
-		graphPanel->Location = System::Drawing::Point(430, 225);
-		graphPanel->Size = System::Drawing::Size(
-			ClientSize.Width - 455,
-			ClientSize.Height - 250);
-		graphPanel->Anchor = AnchorStyles::Top | AnchorStyles::Bottom |
-			AnchorStyles::Left | AnchorStyles::Right;
+		graphPanel->Dock = DockStyle::Fill;
 		graphPanel->BorderStyle = BorderStyle::FixedSingle;
-		Controls->Add(graphPanel);
+		panelGraph->Controls->Add(graphPanel);
 		graphPanel->BringToFront();
+		comboBoxDegree->SelectedIndex = 0;
 	}
 
 	void MyForm::ShowPolynomial(cli::array<double>^ coefficients)
@@ -173,14 +169,6 @@ namespace Project1
 
 	System::Void MyForm::comboBoxDegree_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e)
 	{
-		System::Drawing::Point position(20, 120);
-
-		panelLinear->Location = position;
-		panelQuadratic->Location = position;
-		panelCube->Location = position;
-		panelQuartic->Location = position;
-		panelFifth->Location = position;
-
 		panelLinear->Visible = comboBoxDegree->Text == "1";
 		panelQuadratic->Visible = comboBoxDegree->Text == "2";
 		panelCube->Visible = comboBoxDegree->Text == "3";

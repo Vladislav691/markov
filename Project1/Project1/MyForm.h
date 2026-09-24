@@ -103,6 +103,11 @@ namespace Project1 {
 	private: System::Windows::Forms::Label^ label21;
 	private: System::Windows::Forms::TextBox^ textBoxFifthE;
 	private: System::Windows::Forms::TableLayoutPanel^ tableLayoutPanel1;
+	private: System::Windows::Forms::Panel^ panelSelection;
+	private: System::Windows::Forms::Panel^ panelEquation;
+	private: System::Windows::Forms::Panel^ panelEquationHost;
+	private: System::Windows::Forms::TableLayoutPanel^ layoutResult;
+	private: System::Windows::Forms::Panel^ panelGraph;
 
 
 
@@ -174,6 +179,15 @@ namespace Project1 {
 			this->label21 = (gcnew System::Windows::Forms::Label());
 			this->textBoxFifthE = (gcnew System::Windows::Forms::TextBox());
 			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
+			this->panelSelection = (gcnew System::Windows::Forms::Panel());
+			this->panelEquation = (gcnew System::Windows::Forms::Panel());
+			this->panelEquationHost = (gcnew System::Windows::Forms::Panel());
+			this->layoutResult = (gcnew System::Windows::Forms::TableLayoutPanel());
+			this->panelGraph = (gcnew System::Windows::Forms::Panel());
+			this->panelSelection->SuspendLayout();
+			this->panelEquation->SuspendLayout();
+			this->panelEquationHost->SuspendLayout();
+			this->layoutResult->SuspendLayout();
 			this->panelLinear->SuspendLayout();
 			this->panelQuadratic->SuspendLayout();
 			this->panelCube->SuspendLayout();
@@ -679,42 +693,83 @@ namespace Project1 {
 			// 
 			// tableLayoutPanel1
 			// 
-			this->tableLayoutPanel1->ColumnCount = 2;
-			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
-				50)));
-			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
-				50)));
-			this->tableLayoutPanel1->Controls->Add(this->panelFifth, 0, 0);
-			this->tableLayoutPanel1->Controls->Add(this->panelCube, 0, 2);
-			this->tableLayoutPanel1->Controls->Add(this->panelQuadratic, 0, 5);
-			this->tableLayoutPanel1->Controls->Add(this->panelLinear, 0, 6);
-			this->tableLayoutPanel1->Controls->Add(this->label2, 0, 7);
-			this->tableLayoutPanel1->Controls->Add(this->comboBoxDegree, 0, 8);
-			this->tableLayoutPanel1->Controls->Add(this->label1, 0, 9);
-			this->tableLayoutPanel1->Controls->Add(this->panelQuartic, 0, 3);
-			this->tableLayoutPanel1->Controls->Add(this->buttonSolve, 0, 4);
-			this->tableLayoutPanel1->Controls->Add(this->labelResult, 0, 1);
-			this->tableLayoutPanel1->Location = System::Drawing::Point(0, 8);
+			this->tableLayoutPanel1->ColumnCount = 1;
+			this->tableLayoutPanel1->ColumnStyles->Add(gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 100));
+			this->tableLayoutPanel1->RowCount = 4;
+			this->tableLayoutPanel1->RowStyles->Add(gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 48));
+			this->tableLayoutPanel1->RowStyles->Add(gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 76));
+			this->tableLayoutPanel1->RowStyles->Add(gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::AutoSize));
+			this->tableLayoutPanel1->RowStyles->Add(gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 100));
+			this->tableLayoutPanel1->GrowStyle = System::Windows::Forms::TableLayoutPanelGrowStyle::FixedSize;
+			this->tableLayoutPanel1->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->tableLayoutPanel1->Padding = System::Windows::Forms::Padding(16);
 			this->tableLayoutPanel1->Name = L"tableLayoutPanel1";
-			this->tableLayoutPanel1->RowCount = 2;
-			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 50)));
-			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 50)));
-			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
-			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
-			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
-			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
-			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
-			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
-			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
-			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
-			this->tableLayoutPanel1->Size = System::Drawing::Size(962, 519);
-			this->tableLayoutPanel1->TabIndex = 15;
+			this->tableLayoutPanel1->Controls->Add(this->panelSelection, 0, 0);
+			this->tableLayoutPanel1->Controls->Add(this->panelEquation, 0, 1);
+			this->tableLayoutPanel1->Controls->Add(this->layoutResult, 0, 2);
+			this->tableLayoutPanel1->Controls->Add(this->panelGraph, 0, 3);
+
+			this->panelSelection->Name = L"panelSelection";
+			this->panelSelection->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->panelSelection->Controls->Add(this->label1);
+			this->panelSelection->Controls->Add(this->comboBoxDegree);
+			this->label1->Location = System::Drawing::Point(0, 14);
+			this->comboBoxDegree->Location = System::Drawing::Point(220, 10);
+			this->comboBoxDegree->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+
+			this->panelEquation->Name = L"panelEquation";
+			this->panelEquation->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->panelEquation->Controls->Add(this->panelEquationHost);
+			this->panelEquation->Controls->Add(this->label2);
+			this->label2->Dock = System::Windows::Forms::DockStyle::Top;
+			this->label2->AutoSize = false;
+			this->label2->Height = 22;
+			this->panelEquationHost->Name = L"panelEquationHost";
+			this->panelEquationHost->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->panelEquationHost->Controls->Add(this->panelLinear);
+			this->panelEquationHost->Controls->Add(this->panelQuadratic);
+			this->panelEquationHost->Controls->Add(this->panelCube);
+			this->panelEquationHost->Controls->Add(this->panelQuartic);
+			this->panelEquationHost->Controls->Add(this->panelFifth);
+			this->panelLinear->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->panelQuadratic->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->panelCube->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->panelQuartic->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->panelFifth->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->panelLinear->Visible = false;
+			this->panelQuadratic->Visible = false;
+			this->panelCube->Visible = false;
+			this->panelQuartic->Visible = false;
+			this->panelFifth->Visible = false;
+
+			this->layoutResult->Name = L"layoutResult";
+			this->layoutResult->Dock = System::Windows::Forms::DockStyle::Top;
+			this->layoutResult->AutoSize = true;
+			this->layoutResult->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
+			this->layoutResult->ColumnCount = 2;
+			this->layoutResult->RowCount = 1;
+			this->layoutResult->ColumnStyles->Add(gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute, 110));
+			this->layoutResult->ColumnStyles->Add(gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 100));
+			this->layoutResult->RowStyles->Add(gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::AutoSize));
+			this->layoutResult->Controls->Add(this->buttonSolve, 0, 0);
+			this->layoutResult->Controls->Add(this->labelResult, 1, 0);
+			this->buttonSolve->Size = System::Drawing::Size(94, 36);
+			this->buttonSolve->Anchor = System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left;
+			this->labelResult->AutoSize = true;
+			this->labelResult->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->labelResult->Margin = System::Windows::Forms::Padding(8, 6, 0, 8);
+
+			this->panelGraph->Name = L"panelGraph";
+			this->panelGraph->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->panelGraph->MinimumSize = System::Drawing::Size(0, 180);
 			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(979, 539);
+			this->MinimumSize = System::Drawing::Size(800, 600);
+			this->AcceptButton = this->buttonSolve;
 			this->Controls->Add(this->tableLayoutPanel1);
 			this->Name = L"MyForm";
 			this->Text = L"MyForm";
@@ -729,6 +784,12 @@ namespace Project1 {
 			this->panelFifth->ResumeLayout(false);
 			this->panelFifth->PerformLayout();
 			this->tableLayoutPanel1->ResumeLayout(false);
+			this->panelSelection->ResumeLayout(false);
+			this->panelSelection->PerformLayout();
+			this->panelEquation->ResumeLayout(false);
+			this->panelEquationHost->ResumeLayout(false);
+			this->layoutResult->ResumeLayout(false);
+			this->layoutResult->PerformLayout();
 			this->tableLayoutPanel1->PerformLayout();
 			this->ResumeLayout(false);
 
