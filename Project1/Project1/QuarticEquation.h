@@ -58,8 +58,8 @@ public:
         if (a == 0)
         {
             System::Windows::Forms::MessageBox::Show(
-                "Коэффициент 'a' не должен быть равен 0.",
-                "Ошибка",
+                "РљРѕСЌС„С„РёС†РёРµРЅС‚ 'a' РЅРµ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СЂР°РІРµРЅ 0.",
+                "РћС€РёР±РєР°",
                 System::Windows::Forms::MessageBoxButtons::OK,
                 System::Windows::Forms::MessageBoxIcon::Error
             );
@@ -153,7 +153,7 @@ public:
         }
 
         String^ result = String::Format(
-            "Корни уравнения:\n"
+            "РљРѕСЂРЅРё СѓСЂР°РІРЅРµРЅРёСЏ:\n"
             "x1 = {0:F4} + ({1:F4})i\n"
             "x2 = {2:F4} + ({3:F4})i\n"
             "x3 = {4:F4} + ({5:F4})i\n"

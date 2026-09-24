@@ -2,6 +2,7 @@
 #include "LinearEquation.h"
 #include "QuadraticEquation.h"
 #include "QuarticEquation.h"
+#include "GraphPanel.h"
 #include <iostream>
 #include <cmath>
 #include <complex>
@@ -25,6 +26,7 @@ namespace Project1 {
 		MyForm(void)
 		{
 			InitializeComponent();
+			InitializeGraphPanel();
 			//
 			//TODO: добавьте код конструктора
 			//
@@ -83,6 +85,7 @@ namespace Project1 {
 	private: System::Windows::Forms::TextBox^ textBoxQuarticE;
 	private: System::Windows::Forms::Label^ label15;
 	private: System::Windows::Forms::TextBox^ textBoxQuarticD;
+	private: PolynomialSolver::UI::GraphPanel^ graphPanel;
 
 
 
@@ -542,6 +545,8 @@ namespace Project1 {
 		}
 #pragma endregion
 	private:
+		void InitializeGraphPanel();
+		void ShowPolynomial(cli::array<double>^ coefficients);
 		System::Void comboBoxDegree_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e);
 		System::Void buttonSolve_Click(System::Object^ sender, System::EventArgs^ e);
 };

@@ -36,6 +36,8 @@ public:
 			double x2 = (-b - Math::Sqrt(D)) / (2 * a);
 			return String::Format("x1 = {0}; x2 = {1}", x1, x2);
 		}
+
+		return "Не удалось вычислить корни: проверьте коэффициенты";
 	}
 	
 };

@@ -131,10 +131,15 @@
             "e:\\visual st26\\vc\\tools\\msvc\\14.51.36231\\include\\mmintrin.h",
             "e:\\visual st26\\vc\\tools\\msvc\\14.51.36231\\include\\zmmintrin.h",
             "e:\\visual st26\\vc\\tools\\msvc\\14.51.36231\\include\\ammintrin.h",
+            "c:\\users\\botvl\\markov\\project1\\project1\\graphpanel.h",
             "e:\\visual st26\\vc\\tools\\msvc\\14.51.36231\\include\\iostream",
             "e:\\visual st26\\vc\\tools\\msvc\\14.51.36231\\include\\ostream",
             "e:\\visual st26\\vc\\tools\\msvc\\14.51.36231\\include\\vector",
-            "c:\\users\\botvl\\markov\\project1\\project1\\cubeequation.h"
+            "c:\\users\\botvl\\markov\\project1\\project1\\cubeequation.h",
+            "e:\\visual st26\\vc\\tools\\msvc\\14.51.36231\\include\\algorithm",
+            "e:\\visual st26\\vc\\tools\\msvc\\14.51.36231\\include\\__msvc_heap_algorithms.hpp",
+            "e:\\visual st26\\vc\\tools\\msvc\\14.51.36231\\include\\__msvc_int128.hpp",
+            "e:\\visual st26\\vc\\tools\\msvc\\14.51.36231\\include\\__msvc_minmax.hpp"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []
