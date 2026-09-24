@@ -32,8 +32,10 @@ public:
 		}
 		if (D > 0)
 		{
-			double x1 = (-b + Math::Sqrt(D)) / (2 * a);
-			double x2 = (-b - Math::Sqrt(D)) / (2 * a);
+			double sqrtD = Math::Sqrt(D);
+			double numerator = -0.5 * (b + (b >= 0 ? sqrtD : -sqrtD));
+			double x1 = numerator / a;
+			double x2 = c / numerator;
 			return String::Format("x1 = {0}; x2 = {1}", x1, x2);
 		}
 

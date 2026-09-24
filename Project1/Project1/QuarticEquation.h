@@ -39,8 +39,9 @@ private:
         complex<double> u =
             pow(r1, 1.0 / 3.0);
 
+        // Оба кубических корня должны удовлетворять условию u * v = -p / 3.
         complex<double> v =
-            pow(r2, 1.0 / 3.0);
+            abs(u) == 0.0 ? pow(r2, 1.0 / 3.0) : -p / (3.0 * u);
 
         return u + v - (B / (3.0 * A));
     }
@@ -88,7 +89,7 @@ public:
 
         complex<double> roots[4];
 
-        if (abs(q) < 1e-12)
+        if (q == 0.0)
         {
             complex<double> disc =
                 p * p - 4.0 * r;
@@ -154,10 +155,10 @@ public:
 
         String^ result = String::Format(
             "Корни уравнения:\n"
-            "x1 = {0:F4} + ({1:F4})i\n"
-            "x2 = {2:F4} + ({3:F4})i\n"
-            "x3 = {4:F4} + ({5:F4})i\n"
-            "x4 = {6:F4} + ({7:F4})i",
+            "x1 = {0:G10} + ({1:G10})i\n"
+            "x2 = {2:G10} + ({3:G10})i\n"
+            "x3 = {4:G10} + ({5:G10})i\n"
+            "x4 = {6:G10} + ({7:G10})i",
 
             roots[0].real(), roots[0].imag(),
             roots[1].real(), roots[1].imag(),

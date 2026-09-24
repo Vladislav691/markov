@@ -20,9 +20,9 @@ namespace
 		double scale = 0.0;
 		for (double coefficient : coefficients)
 		{
-			scale = scale * std::max(1.0, std::abs(x)) + std::abs(coefficient);
+			scale = scale * std::abs(x) + std::abs(coefficient);
 		}
-		return std::max(1.0, scale);
+		return scale;
 	}
 
 	void AddUniqueRoot(std::vector<double>& roots, double root)
@@ -39,7 +39,7 @@ namespace
 
 	std::vector<double> FindRealRoots(std::vector<double> coefficients)
 	{
-		while (coefficients.size() > 1 && std::abs(coefficients.front()) < 1e-12)
+		while (coefficients.size() > 1 && coefficients.front() == 0.0)
 		{
 			coefficients.erase(coefficients.begin());
 		}

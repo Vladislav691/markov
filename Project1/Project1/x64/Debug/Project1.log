@@ -1,9 +1,7 @@
-﻿E:\visual st26\MSBuild\Microsoft\VC\v180\Microsoft.CppClean.targets(77,5): warning : Отказано в доступе по пути "c:\users\botvl\markov\project1\x64\debug\project1.exe".
-  GraphPanel.cpp
+﻿  GraphPanel.cpp
   MyForm.cpp
   Source.cpp
   .NETFramework,Version=v4.8.AssemblyAttributes.cpp
   Создание кода...
-C:\Users\botvl\markov\Project1\Project1\QuadraticEquation.h(39,1): warning C4715: QuadraticEquation::Solve: значение возвращается не при всех путях выполнения
-C:\Users\botvl\markov\Project1\Project1\QuadraticEquation.h(39,1): warning C4715: QuadraticEquation::Solve: значение возвращается не при всех путях выполнения
-LINK : fatal error LNK1104: не удается открыть файл "C:\Users\botvl\markov\Project1\x64\Debug\Project1.exe"
+  GraphPanel.obj : обнаружен модуль MSIL; для MSIL последовательная компоновка отключена; выполняется полная компоновка
+  Project1.vcxproj -> C:\Users\botvl\markov\Project1\x64\Debug\Project1.exe
