@@ -17,7 +17,7 @@ namespace Project1 {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Сводка для MyForm
+	/// РЎРІРѕРґРєР° РґР»СЏ MyForm
 	/// </summary>
 	public ref class MyForm : public System::Windows::Forms::Form
 	{
@@ -26,13 +26,13 @@ namespace Project1 {
 		{
 			InitializeComponent();
 			//
-			//TODO: добавьте код конструктора
+			//TODO: РґРѕР±Р°РІСЊС‚Рµ РєРѕРґ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР°
 			//
 		}
 
 	protected:
 		/// <summary>
-		/// Освободить все используемые ресурсы.
+		/// РћСЃРІРѕР±РѕРґРёС‚СЊ РІСЃРµ РёСЃРїРѕР»СЊР·СѓРµРјС‹Рµ СЂРµСЃСѓСЂСЃС‹.
 		/// </summary>
 		~MyForm()
 		{
@@ -91,14 +91,14 @@ namespace Project1 {
 
 	private:
 		/// <summary>
-		/// Обязательная переменная конструктора.
+		/// РћР±СЏР·Р°С‚РµР»СЊРЅР°СЏ РїРµСЂРµРјРµРЅРЅР°СЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР°.
 		/// </summary>
 		System::ComponentModel::Container ^components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
-		/// Требуемый метод для поддержки конструктора — не изменяйте 
-		/// содержимое этого метода с помощью редактора кода.
+		/// РўСЂРµР±СѓРµРјС‹Р№ РјРµС‚РѕРґ РґР»СЏ РїРѕРґРґРµСЂР¶РєРё РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° вЂ” РЅРµ РёР·РјРµРЅСЏР№С‚Рµ 
+		/// СЃРѕРґРµСЂР¶РёРјРѕРµ СЌС‚РѕРіРѕ РјРµС‚РѕРґР° СЃ РїРѕРјРѕС‰СЊСЋ СЂРµРґР°РєС‚РѕСЂР° РєРѕРґР°.
 		/// </summary>
 		void InitializeComponent(void)
 		{
@@ -154,7 +154,7 @@ namespace Project1 {
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(194, 16);
 			this->label1->TabIndex = 0;
-			this->label1->Text = L"Введите степень уравнения";
+			this->label1->Text = L"Р’РІРµРґРёС‚Рµ СЃС‚РµРїРµРЅСЊ СѓСЂР°РІРЅРµРЅРёСЏ";
 			// 
 			// comboBoxDegree
 			// 
@@ -175,7 +175,7 @@ namespace Project1 {
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(155, 16);
 			this->label2->TabIndex = 2;
-			this->label2->Text = L"Реши уравнение вида:";
+			this->label2->Text = L"Р РµС€Рё СѓСЂР°РІРЅРµРЅРёРµ РІРёРґР°:";
 			// 
 			// panelLinear
 			// 
@@ -301,7 +301,7 @@ namespace Project1 {
 			this->buttonSolve->Name = L"buttonSolve";
 			this->buttonSolve->Size = System::Drawing::Size(94, 44);
 			this->buttonSolve->TabIndex = 5;
-			this->buttonSolve->Text = L"Решить";
+			this->buttonSolve->Text = L"Р РµС€РёС‚СЊ";
 			this->buttonSolve->UseVisualStyleBackColor = true;
 			this->buttonSolve->Click += gcnew System::EventHandler(this, &MyForm::buttonSolve_Click);
 			// 
@@ -314,7 +314,7 @@ namespace Project1 {
 			this->labelResult->Name = L"labelResult";
 			this->labelResult->Size = System::Drawing::Size(113, 24);
 			this->labelResult->TabIndex = 6;
-			this->labelResult->Text = L"Результат: ";
+			this->labelResult->Text = L"Р РµР·СѓР»СЊС‚Р°С‚: ";
 			// 
 			// panelCube
 			// 
@@ -541,74 +541,8 @@ namespace Project1 {
 
 		}
 #pragma endregion
-	private: System::Void comboBoxDegree_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) 
-	{
-		if (comboBoxDegree->Text == "1")
-		{
-			panelLinear->Visible = true;
-		}
-		else if (comboBoxDegree->Text == "2")
-		{
-			panelQuadratic->Visible = true;
-		}
-		else if (comboBoxDegree->Text == "3")
-		{
-			panelCube->Visible = true;
-		}
-		else if (comboBoxDegree->Text == "4")
-		{
-			panelQuartic->Visible = true;
-		}
-	}
-	private: System::Void buttonSolve_Click(System::Object^ sender, System::EventArgs^ e) 
-	{
-		try
-		{
-			if (comboBoxDegree->Text == "1")
-			{
-				double a = Double::Parse(textBoxLinearA->Text);
-				double b = Double::Parse(textBoxLinearB->Text);
-				LinearEquation^ equation = gcnew LinearEquation(a, b);
-				labelResult->Text = equation->Solve();
-			}
-			else if (comboBoxDegree->Text == "2")
-			{
-				double a = Double::Parse(textBoxQuadraticA->Text);
-				double b = Double::Parse(textBoxQuadraticB->Text);
-				double c = Double::Parse(textBoxQuadraticC->Text);
-
-				QuadraticEquation^ equation = gcnew QuadraticEquation(a, b, c);
-
-				labelResult->Text = equation->Solve();
-			}
-			else if (comboBoxDegree->Text == "3")
-			{
-				double a = Double::Parse(textBoxCubeA->Text);
-				double b = Double::Parse(textBoxCubeB->Text);
-				double c = Double::Parse(textBoxCubeC->Text);
-				double d = Double::Parse(textBoxCubeD->Text);
-
-				CubeEquation^ equation = gcnew CubeEquation(a, b, c, d);
-
-				labelResult->Text = equation->Solve();
-			}
-			else if (comboBoxDegree->Text == "4")
-			{
-				double a = Double::Parse(textBoxQuarticA->Text);
-				double b = Double::Parse(textBoxQuarticB->Text);
-				double c = Double::Parse(textBoxQuarticC->Text);
-				double d = Double::Parse(textBoxQuarticD->Text);
-				double e = Double::Parse(textBoxQuarticE->Text);
-
-				QuarticEquation^ equation = gcnew QuarticEquation();
-
-				labelResult->Text = equation->solveQuarticFerrari(a, b, c, d, e);
-			}
-		}
-		catch (FormatException^)
-		{
-			labelResult->Text = "Введите только числа!";
-		}
-	}
+	private:
+		System::Void comboBoxDegree_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e);
+		System::Void buttonSolve_Click(System::Object^ sender, System::EventArgs^ e);
 };
 }
