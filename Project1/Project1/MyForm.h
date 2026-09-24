@@ -86,6 +86,24 @@ namespace Project1 {
 	private: System::Windows::Forms::Label^ label15;
 	private: System::Windows::Forms::TextBox^ textBoxQuarticD;
 	private: PolynomialSolver::UI::GraphPanel^ graphPanel;
+	private: System::Windows::Forms::Panel^ panelFifth;
+
+	private: System::Windows::Forms::Label^ label22;
+	private: System::Windows::Forms::TextBox^ textBoxFifthA;
+	private: System::Windows::Forms::Label^ label17;
+	private: System::Windows::Forms::Label^ label18;
+	private: System::Windows::Forms::TextBox^ textBoxFifthB;
+	private: System::Windows::Forms::TextBox^ textBoxFifthC;
+	private: System::Windows::Forms::Label^ label19;
+	private: System::Windows::Forms::TextBox^ textBoxFifthD;
+
+	private: System::Windows::Forms::Label^ label20;
+	private: System::Windows::Forms::TextBox^ textBoxFifthF;
+
+	private: System::Windows::Forms::Label^ label21;
+	private: System::Windows::Forms::TextBox^ textBoxFifthE;
+	private: System::Windows::Forms::TableLayoutPanel^ tableLayoutPanel1;
+
 
 
 
@@ -132,7 +150,9 @@ namespace Project1 {
 			this->label10 = (gcnew System::Windows::Forms::Label());
 			this->textBoxCubeC = (gcnew System::Windows::Forms::TextBox());
 			this->panelQuartic = (gcnew System::Windows::Forms::Panel());
+			this->label16 = (gcnew System::Windows::Forms::Label());
 			this->label12 = (gcnew System::Windows::Forms::Label());
+			this->textBoxQuarticA = (gcnew System::Windows::Forms::TextBox());
 			this->textBoxQuarticB = (gcnew System::Windows::Forms::TextBox());
 			this->label13 = (gcnew System::Windows::Forms::Label());
 			this->textBoxQuarticC = (gcnew System::Windows::Forms::TextBox());
@@ -140,12 +160,26 @@ namespace Project1 {
 			this->textBoxQuarticE = (gcnew System::Windows::Forms::TextBox());
 			this->label15 = (gcnew System::Windows::Forms::Label());
 			this->textBoxQuarticD = (gcnew System::Windows::Forms::TextBox());
-			this->label16 = (gcnew System::Windows::Forms::Label());
-			this->textBoxQuarticA = (gcnew System::Windows::Forms::TextBox());
+			this->panelFifth = (gcnew System::Windows::Forms::Panel());
+			this->label22 = (gcnew System::Windows::Forms::Label());
+			this->textBoxFifthA = (gcnew System::Windows::Forms::TextBox());
+			this->label17 = (gcnew System::Windows::Forms::Label());
+			this->label18 = (gcnew System::Windows::Forms::Label());
+			this->textBoxFifthB = (gcnew System::Windows::Forms::TextBox());
+			this->textBoxFifthC = (gcnew System::Windows::Forms::TextBox());
+			this->label19 = (gcnew System::Windows::Forms::Label());
+			this->textBoxFifthD = (gcnew System::Windows::Forms::TextBox());
+			this->label20 = (gcnew System::Windows::Forms::Label());
+			this->textBoxFifthF = (gcnew System::Windows::Forms::TextBox());
+			this->label21 = (gcnew System::Windows::Forms::Label());
+			this->textBoxFifthE = (gcnew System::Windows::Forms::TextBox());
+			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->panelLinear->SuspendLayout();
 			this->panelQuadratic->SuspendLayout();
 			this->panelCube->SuspendLayout();
 			this->panelQuartic->SuspendLayout();
+			this->panelFifth->SuspendLayout();
+			this->tableLayoutPanel1->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// label1
@@ -153,9 +187,9 @@ namespace Project1 {
 			this->label1->AutoSize = true;
 			this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label1->Location = System::Drawing::Point(53, 32);
+			this->label1->Location = System::Drawing::Point(3, 498);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(194, 16);
+			this->label1->Size = System::Drawing::Size(193, 16);
 			this->label1->TabIndex = 0;
 			this->label1->Text = L"Введите степень уравнения";
 			// 
@@ -163,7 +197,7 @@ namespace Project1 {
 			// 
 			this->comboBoxDegree->FormattingEnabled = true;
 			this->comboBoxDegree->Items->AddRange(gcnew cli::array< System::Object^  >(5) { L"1", L"2", L"3", L"4", L"5" });
-			this->comboBoxDegree->Location = System::Drawing::Point(264, 27);
+			this->comboBoxDegree->Location = System::Drawing::Point(3, 481);
 			this->comboBoxDegree->Name = L"comboBoxDegree";
 			this->comboBoxDegree->Size = System::Drawing::Size(138, 21);
 			this->comboBoxDegree->TabIndex = 1;
@@ -174,9 +208,9 @@ namespace Project1 {
 			this->label2->AutoSize = true;
 			this->label2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label2->Location = System::Drawing::Point(53, 87);
+			this->label2->Location = System::Drawing::Point(3, 458);
 			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(155, 16);
+			this->label2->Size = System::Drawing::Size(154, 16);
 			this->label2->TabIndex = 2;
 			this->label2->Text = L"Реши уравнение вида:";
 			// 
@@ -186,9 +220,9 @@ namespace Project1 {
 			this->panelLinear->Controls->Add(this->label3);
 			this->panelLinear->Controls->Add(this->textBoxLinearB);
 			this->panelLinear->Controls->Add(this->textBoxLinearA);
-			this->panelLinear->Location = System::Drawing::Point(54, 117);
+			this->panelLinear->Location = System::Drawing::Point(3, 441);
 			this->panelLinear->Name = L"panelLinear";
-			this->panelLinear->Size = System::Drawing::Size(282, 34);
+			this->panelLinear->Size = System::Drawing::Size(282, 14);
 			this->panelLinear->TabIndex = 3;
 			this->panelLinear->Visible = false;
 			// 
@@ -236,9 +270,9 @@ namespace Project1 {
 			this->panelQuadratic->Controls->Add(this->textBoxQuadraticC);
 			this->panelQuadratic->Controls->Add(this->label6);
 			this->panelQuadratic->Controls->Add(this->textBoxQuadraticB);
-			this->panelQuadratic->Location = System::Drawing::Point(54, 175);
+			this->panelQuadratic->Location = System::Drawing::Point(3, 421);
 			this->panelQuadratic->Name = L"panelQuadratic";
-			this->panelQuadratic->Size = System::Drawing::Size(282, 37);
+			this->panelQuadratic->Size = System::Drawing::Size(282, 14);
 			this->panelQuadratic->TabIndex = 4;
 			this->panelQuadratic->Visible = false;
 			// 
@@ -300,9 +334,9 @@ namespace Project1 {
 			// 
 			this->buttonSolve->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->buttonSolve->Location = System::Drawing::Point(467, 113);
+			this->buttonSolve->Location = System::Drawing::Point(3, 401);
 			this->buttonSolve->Name = L"buttonSolve";
-			this->buttonSolve->Size = System::Drawing::Size(94, 44);
+			this->buttonSolve->Size = System::Drawing::Size(94, 14);
 			this->buttonSolve->TabIndex = 5;
 			this->buttonSolve->Text = L"Решить";
 			this->buttonSolve->UseVisualStyleBackColor = true;
@@ -313,7 +347,7 @@ namespace Project1 {
 			this->labelResult->AutoSize = true;
 			this->labelResult->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->labelResult->Location = System::Drawing::Point(463, 175);
+			this->labelResult->Location = System::Drawing::Point(3, 179);
 			this->labelResult->Name = L"labelResult";
 			this->labelResult->Size = System::Drawing::Size(113, 24);
 			this->labelResult->TabIndex = 6;
@@ -329,9 +363,9 @@ namespace Project1 {
 			this->panelCube->Controls->Add(this->textBoxCubeD);
 			this->panelCube->Controls->Add(this->label10);
 			this->panelCube->Controls->Add(this->textBoxCubeC);
-			this->panelCube->Location = System::Drawing::Point(54, 232);
+			this->panelCube->Location = System::Drawing::Point(3, 361);
 			this->panelCube->Name = L"panelCube";
-			this->panelCube->Size = System::Drawing::Size(355, 37);
+			this->panelCube->Size = System::Drawing::Size(355, 14);
 			this->panelCube->TabIndex = 10;
 			this->panelCube->Visible = false;
 			// 
@@ -419,11 +453,22 @@ namespace Project1 {
 			this->panelQuartic->Controls->Add(this->textBoxQuarticE);
 			this->panelQuartic->Controls->Add(this->label15);
 			this->panelQuartic->Controls->Add(this->textBoxQuarticD);
-			this->panelQuartic->Location = System::Drawing::Point(54, 286);
+			this->panelQuartic->Location = System::Drawing::Point(3, 381);
 			this->panelQuartic->Name = L"panelQuartic";
-			this->panelQuartic->Size = System::Drawing::Size(438, 37);
+			this->panelQuartic->Size = System::Drawing::Size(438, 14);
 			this->panelQuartic->TabIndex = 12;
 			this->panelQuartic->Visible = false;
+			// 
+			// label16
+			// 
+			this->label16->AutoSize = true;
+			this->label16->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label16->Location = System::Drawing::Point(41, 14);
+			this->label16->Name = L"label16";
+			this->label16->Size = System::Drawing::Size(45, 20);
+			this->label16->TabIndex = 13;
+			this->label16->Text = L"x^4 +";
 			// 
 			// label12
 			// 
@@ -435,6 +480,13 @@ namespace Project1 {
 			this->label12->Size = System::Drawing::Size(45, 20);
 			this->label12->TabIndex = 11;
 			this->label12->Text = L"x^3 +";
+			// 
+			// textBoxQuarticA
+			// 
+			this->textBoxQuarticA->Location = System::Drawing::Point(5, 14);
+			this->textBoxQuarticA->Name = L"textBoxQuarticA";
+			this->textBoxQuarticA->Size = System::Drawing::Size(33, 20);
+			this->textBoxQuarticA->TabIndex = 12;
 			// 
 			// textBoxQuarticB
 			// 
@@ -497,38 +549,173 @@ namespace Project1 {
 			this->textBoxQuarticD->Size = System::Drawing::Size(45, 20);
 			this->textBoxQuarticD->TabIndex = 4;
 			// 
-			// label16
+			// panelFifth
 			// 
-			this->label16->AutoSize = true;
-			this->label16->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->panelFifth->Controls->Add(this->label22);
+			this->panelFifth->Controls->Add(this->textBoxFifthA);
+			this->panelFifth->Controls->Add(this->label17);
+			this->panelFifth->Controls->Add(this->label18);
+			this->panelFifth->Controls->Add(this->textBoxFifthB);
+			this->panelFifth->Controls->Add(this->textBoxFifthC);
+			this->panelFifth->Controls->Add(this->label19);
+			this->panelFifth->Controls->Add(this->textBoxFifthD);
+			this->panelFifth->Controls->Add(this->label20);
+			this->panelFifth->Controls->Add(this->textBoxFifthF);
+			this->panelFifth->Controls->Add(this->label21);
+			this->panelFifth->Controls->Add(this->textBoxFifthE);
+			this->panelFifth->Location = System::Drawing::Point(3, 3);
+			this->panelFifth->Name = L"panelFifth";
+			this->panelFifth->Size = System::Drawing::Size(475, 37);
+			this->panelFifth->TabIndex = 14;
+			this->panelFifth->Visible = false;
+			// 
+			// label22
+			// 
+			this->label22->AutoSize = true;
+			this->label22->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label16->Location = System::Drawing::Point(41, 14);
-			this->label16->Name = L"label16";
-			this->label16->Size = System::Drawing::Size(45, 20);
-			this->label16->TabIndex = 13;
-			this->label16->Text = L"x^4 +";
+			this->label22->Location = System::Drawing::Point(43, 14);
+			this->label22->Name = L"label22";
+			this->label22->Size = System::Drawing::Size(45, 20);
+			this->label22->TabIndex = 15;
+			this->label22->Text = L"x^5 +";
 			// 
-			// textBoxQuarticA
+			// textBoxFifthA
 			// 
-			this->textBoxQuarticA->Location = System::Drawing::Point(5, 14);
-			this->textBoxQuarticA->Name = L"textBoxQuarticA";
-			this->textBoxQuarticA->Size = System::Drawing::Size(33, 20);
-			this->textBoxQuarticA->TabIndex = 12;
+			this->textBoxFifthA->Location = System::Drawing::Point(7, 14);
+			this->textBoxFifthA->Name = L"textBoxFifthA";
+			this->textBoxFifthA->Size = System::Drawing::Size(33, 20);
+			this->textBoxFifthA->TabIndex = 14;
+			// 
+			// label17
+			// 
+			this->label17->AutoSize = true;
+			this->label17->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label17->Location = System::Drawing::Point(126, 14);
+			this->label17->Name = L"label17";
+			this->label17->Size = System::Drawing::Size(45, 20);
+			this->label17->TabIndex = 13;
+			this->label17->Text = L"x^4 +";
+			// 
+			// label18
+			// 
+			this->label18->AutoSize = true;
+			this->label18->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label18->Location = System::Drawing::Point(214, 14);
+			this->label18->Name = L"label18";
+			this->label18->Size = System::Drawing::Size(45, 20);
+			this->label18->TabIndex = 11;
+			this->label18->Text = L"x^3 +";
+			// 
+			// textBoxFifthB
+			// 
+			this->textBoxFifthB->Location = System::Drawing::Point(90, 14);
+			this->textBoxFifthB->Name = L"textBoxFifthB";
+			this->textBoxFifthB->Size = System::Drawing::Size(33, 20);
+			this->textBoxFifthB->TabIndex = 12;
+			// 
+			// textBoxFifthC
+			// 
+			this->textBoxFifthC->Location = System::Drawing::Point(178, 14);
+			this->textBoxFifthC->Name = L"textBoxFifthC";
+			this->textBoxFifthC->Size = System::Drawing::Size(33, 20);
+			this->textBoxFifthC->TabIndex = 10;
+			// 
+			// label19
+			// 
+			this->label19->AutoSize = true;
+			this->label19->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label19->Location = System::Drawing::Point(301, 14);
+			this->label19->Name = L"label19";
+			this->label19->Size = System::Drawing::Size(45, 20);
+			this->label19->TabIndex = 9;
+			this->label19->Text = L"x^2 +";
+			// 
+			// textBoxFifthD
+			// 
+			this->textBoxFifthD->Location = System::Drawing::Point(265, 14);
+			this->textBoxFifthD->Name = L"textBoxFifthD";
+			this->textBoxFifthD->Size = System::Drawing::Size(33, 20);
+			this->textBoxFifthD->TabIndex = 8;
+			// 
+			// label20
+			// 
+			this->label20->AutoSize = true;
+			this->label20->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label20->Location = System::Drawing::Point(469, 14);
+			this->label20->Name = L"label20";
+			this->label20->Size = System::Drawing::Size(35, 20);
+			this->label20->TabIndex = 7;
+			this->label20->Text = L"=  0";
+			// 
+			// textBoxFifthF
+			// 
+			this->textBoxFifthF->Location = System::Drawing::Point(424, 14);
+			this->textBoxFifthF->Name = L"textBoxFifthF";
+			this->textBoxFifthF->Size = System::Drawing::Size(39, 20);
+			this->textBoxFifthF->TabIndex = 5;
+			// 
+			// label21
+			// 
+			this->label21->AutoSize = true;
+			this->label21->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label21->Location = System::Drawing::Point(395, 14);
+			this->label21->Name = L"label21";
+			this->label21->Size = System::Drawing::Size(29, 20);
+			this->label21->TabIndex = 6;
+			this->label21->Text = L"x +";
+			// 
+			// textBoxFifthE
+			// 
+			this->textBoxFifthE->Location = System::Drawing::Point(347, 14);
+			this->textBoxFifthE->Name = L"textBoxFifthE";
+			this->textBoxFifthE->Size = System::Drawing::Size(45, 20);
+			this->textBoxFifthE->TabIndex = 4;
+			// 
+			// tableLayoutPanel1
+			// 
+			this->tableLayoutPanel1->ColumnCount = 2;
+			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
+				50)));
+			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
+				50)));
+			this->tableLayoutPanel1->Controls->Add(this->panelFifth, 0, 0);
+			this->tableLayoutPanel1->Controls->Add(this->panelCube, 0, 2);
+			this->tableLayoutPanel1->Controls->Add(this->panelQuadratic, 0, 5);
+			this->tableLayoutPanel1->Controls->Add(this->panelLinear, 0, 6);
+			this->tableLayoutPanel1->Controls->Add(this->label2, 0, 7);
+			this->tableLayoutPanel1->Controls->Add(this->comboBoxDegree, 0, 8);
+			this->tableLayoutPanel1->Controls->Add(this->label1, 0, 9);
+			this->tableLayoutPanel1->Controls->Add(this->panelQuartic, 0, 3);
+			this->tableLayoutPanel1->Controls->Add(this->buttonSolve, 0, 4);
+			this->tableLayoutPanel1->Controls->Add(this->labelResult, 0, 1);
+			this->tableLayoutPanel1->Location = System::Drawing::Point(0, 8);
+			this->tableLayoutPanel1->Name = L"tableLayoutPanel1";
+			this->tableLayoutPanel1->RowCount = 2;
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 50)));
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 50)));
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
+			this->tableLayoutPanel1->Size = System::Drawing::Size(962, 519);
+			this->tableLayoutPanel1->TabIndex = 15;
 			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(979, 539);
-			this->Controls->Add(this->panelQuartic);
-			this->Controls->Add(this->panelCube);
-			this->Controls->Add(this->labelResult);
-			this->Controls->Add(this->buttonSolve);
-			this->Controls->Add(this->panelQuadratic);
-			this->Controls->Add(this->panelLinear);
-			this->Controls->Add(this->label2);
-			this->Controls->Add(this->comboBoxDegree);
-			this->Controls->Add(this->label1);
+			this->Controls->Add(this->tableLayoutPanel1);
 			this->Name = L"MyForm";
 			this->Text = L"MyForm";
 			this->panelLinear->ResumeLayout(false);
@@ -539,8 +726,11 @@ namespace Project1 {
 			this->panelCube->PerformLayout();
 			this->panelQuartic->ResumeLayout(false);
 			this->panelQuartic->PerformLayout();
+			this->panelFifth->ResumeLayout(false);
+			this->panelFifth->PerformLayout();
+			this->tableLayoutPanel1->ResumeLayout(false);
+			this->tableLayoutPanel1->PerformLayout();
 			this->ResumeLayout(false);
-			this->PerformLayout();
 
 		}
 #pragma endregion

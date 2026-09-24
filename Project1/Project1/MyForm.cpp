@@ -1,4 +1,5 @@
 #include "MyForm.h"
+#include "FifthEquation.h"
 #include <algorithm>
 #include <cmath>
 #include <vector>
@@ -108,6 +109,12 @@ namespace
 			{
 				const double middle = (left + right) / 2.0;
 				const double middleValue = EvaluatePolynomial(coefficients, middle);
+				if (middleValue == 0.0)
+				{
+					left = middle;
+					right = middle;
+					break;
+				}
 
 				if ((leftValue < 0.0 && middleValue > 0.0) ||
 					(leftValue > 0.0 && middleValue < 0.0))
@@ -166,28 +173,22 @@ namespace Project1
 
 	System::Void MyForm::comboBoxDegree_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e)
 	{
-		panelLinear->Visible = false;
-		panelQuadratic->Visible = false;
-		panelCube->Visible = false;
-		panelQuartic->Visible = false;
-		graphPanel->ClearGraph();
+		System::Drawing::Point position(20, 120);
 
-		if (comboBoxDegree->Text == "1")
-		{
-			panelLinear->Visible = true;
-		}
-		else if (comboBoxDegree->Text == "2")
-		{
-			panelQuadratic->Visible = true;
-		}
-		else if (comboBoxDegree->Text == "3")
-		{
-			panelCube->Visible = true;
-		}
-		else if (comboBoxDegree->Text == "4")
-		{
-			panelQuartic->Visible = true;
-		}
+		panelLinear->Location = position;
+		panelQuadratic->Location = position;
+		panelCube->Location = position;
+		panelQuartic->Location = position;
+		panelFifth->Location = position;
+
+		panelLinear->Visible = comboBoxDegree->Text == "1";
+		panelQuadratic->Visible = comboBoxDegree->Text == "2";
+		panelCube->Visible = comboBoxDegree->Text == "3";
+		panelQuartic->Visible = comboBoxDegree->Text == "4";
+		panelFifth->Visible = comboBoxDegree->Text == "5";
+
+		labelResult->Text = L"Результат:";
+		graphPanel->ClearGraph();
 	}
 
 	System::Void MyForm::buttonSolve_Click(System::Object^ sender, System::EventArgs^ e)
@@ -234,6 +235,21 @@ namespace Project1
 				QuarticEquation^ equation = gcnew QuarticEquation();
 				labelResult->Text = equation->solveQuarticFerrari(a, b, c, d, e);
 				ShowPolynomial(gcnew cli::array<double> { a, b, c, d, e });
+			}
+			else if (comboBoxDegree->Text == "5")
+			{
+				double a = Double::Parse(textBoxFifthA->Text);
+				double b = Double::Parse(textBoxFifthB->Text);
+				double c = Double::Parse(textBoxFifthC->Text);
+				double d = Double::Parse(textBoxFifthD->Text);
+				double e = Double::Parse(textBoxFifthE->Text);
+				double f = Double::Parse(textBoxFifthF->Text);
+
+				FifthEquation^ equation = gcnew FifthEquation(a, b, c, d, e, f);
+
+				labelResult->Text = equation->Solve();
+
+				ShowPolynomial(gcnew cli::array<double> { a, b, c, d, e, f });
 			}
 		}
 		catch (FormatException^)
