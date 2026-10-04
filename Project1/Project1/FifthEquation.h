@@ -1,5 +1,5 @@
 #pragma once
-#include "QuarticEquation.h"
+#include <cmath>
 using namespace System;
 public ref class FifthEquation
 {
@@ -21,11 +21,11 @@ public:
 		this->e = e;
 		this->f = f;
 	}
-	String^ Solve()
+	double Solve(double left, double right)
 	{
 		if (a == 0)
 		{
-			return L"Коэффициент a не должен быть равен нулю";
+			throw gcnew ArgumentException(L"Коэффициент a не должен быть равен нулю");
 		}
 		if (Double::IsNaN(a) || Double::IsInfinity(a) ||
 			Double::IsNaN(b) || Double::IsInfinity(b) ||
@@ -34,56 +34,44 @@ public:
 			Double::IsNaN(e) || Double::IsInfinity(e) ||
 			Double::IsNaN(f) || Double::IsInfinity(f))
 		{
-			return L"Введите конечные числовые коэффициенты";
+			throw gcnew ArgumentException(L"Введите конечные числовые коэффициенты");
 		}
 
-		if (f == 0)
+		if (Double::IsNaN(left) || Double::IsInfinity(left) ||
+			Double::IsNaN(right) || Double::IsInfinity(right))
 		{
-			QuarticEquation^ equation = gcnew QuarticEquation();
-
-			String^ otherRoots = equation->solveQuarticFerrari(a, b, c, d, e);
-
-			return L"Один корень: x = 0\n"
-				L"Остальные четыре корня:\n" + otherRoots;
+			throw gcnew ArgumentException(L"Введите конечные числовые границы отрезка");
 		}
-		double R = Math::Abs(b / a);
-		R = Math::Max(R, Math::Abs(c / a));
-		R = Math::Max(R, Math::Abs(d / a));
-		R = Math::Max(R, Math::Abs(e / a));
-		R = Math::Max(R, Math::Abs(f / a));
-		R += 1;
-		if (Double::IsInfinity(R))
+		if (left >= right)
 		{
-			return L"Слишком большая разница между коэффициентами";
+			throw gcnew ArgumentException(L"Левая граница должна быть меньше правой");
 		}
-		double left = -R;
-		double right = R;
 		double leftValue = Calculate(left);
 		double rightValue = Calculate(right);
 
 		if (Double::IsNaN(leftValue) || Double::IsInfinity(leftValue) ||
 			Double::IsNaN(rightValue) || Double::IsInfinity(rightValue))
 		{
-			return L"Слишком большие значения для вычисления";
+			throw gcnew ArgumentException(L"Слишком большие значения для вычисления");
 		}
 
 		if (leftValue == 0)
 		{
-			return String::Format(L"x = {0:G10}", left);
+			return left;
 		}
 		if (rightValue == 0)
 		{
-			return String::Format(L"x = {0:G10}", right);
+			return right;
 		}
 		if ((leftValue > 0 && rightValue > 0) ||
 			(leftValue < 0 && rightValue < 0))
 		{
-			return L"Не удалось подобрать отрезок из-за погрешности вычислений";
+			throw gcnew ArgumentException(L"На концах отрезка функция имеет одинаковый знак. Выберите другой отрезок.");
 		}
 
 		const double accuracy = 0.000001;
 		// Постепенно сужаем отрезок, содержащий корень.
-		for (int i = 0; i < 200; i++)
+		while (true)
 		{
 			double middle = left / 2.0 + right / 2.0;
 			double middleValue = Calculate(middle);
@@ -91,18 +79,18 @@ public:
 			if (Double::IsNaN(middleValue) ||
 				Double::IsInfinity(middleValue))
 			{
-				return L"Слишком большие значения для вычисления";
+				throw gcnew ArgumentException(L"Слишком большие значения для вычисления");
 			}
 
 			if (middleValue == 0 ||
 				Math::Abs(right / 2.0 - left / 2.0) <= accuracy)
 			{
-				return String::Format(L"x ≈ {0:G10}", middle);
+				return middle;
 			}
 
 			// Дальнейшее деление невозможно из-за точности double.
 			if (middle == left || middle == right)
-				return L"Не удалось достичь заданной точности";
+				throw gcnew ArgumentException(L"Не удалось достичь заданной точности. Выберите более узкий отрезок.");
 
 			if ((leftValue < 0 && middleValue > 0) ||
 				(leftValue > 0 && middleValue < 0))
@@ -115,6 +103,5 @@ public:
 				leftValue = middleValue;
 			}
 		}
-		return L"Не удалось достичь заданной точности";
 	}
 };

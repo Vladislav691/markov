@@ -149,6 +149,95 @@ namespace Project1
 		comboBoxDegree->SelectedIndex = 0;
 	}
 
+	void MyForm::InitializeSolutionControls()
+	{
+		Panel^ buttonHost = gcnew Panel();
+		buttonHost->Size = buttonSolve->Size;
+		buttonHost->Margin = buttonSolve->Margin;
+		buttonHost->Anchor = buttonSolve->Anchor;
+		layoutResult->Controls->Remove(buttonSolve);
+		layoutResult->Controls->Add(buttonHost, 0, 0);
+		buttonSolve->Dock = DockStyle::Fill;
+		buttonHost->Controls->Add(buttonSolve);
+
+		buttonReset = gcnew Button();
+		buttonReset->Name = L"buttonReset";
+		buttonReset->Text = L"Сбросить";
+		buttonReset->Font = buttonSolve->Font;
+		buttonReset->Dock = DockStyle::Fill;
+		buttonReset->UseVisualStyleBackColor = true;
+		buttonReset->Click += gcnew EventHandler(this, &MyForm::buttonReset_Click);
+		buttonHost->Controls->Add(buttonReset);
+		Label^ labelLeft = gcnew Label();
+		labelLeft->Text = L"Левая граница:";
+		labelLeft->AutoSize = true;
+		labelLeft->Location = Point(11, 50);
+		panelFifth->Controls->Add(labelLeft);
+		textBoxIntervalLeft = gcnew TextBox();
+		textBoxIntervalLeft->Name = L"textBoxIntervalLeft";
+		textBoxIntervalLeft->Location = Point(115, 47);
+		textBoxIntervalLeft->Width = 90;
+		textBoxIntervalLeft->TabIndex = 15;
+		panelFifth->Controls->Add(textBoxIntervalLeft);
+
+		Label^ labelRight = gcnew Label();
+		labelRight->Text = L"Правая граница:";
+		labelRight->AutoSize = true;
+		labelRight->Location = Point(225, 50);
+		panelFifth->Controls->Add(labelRight);
+		textBoxIntervalRight = gcnew TextBox();
+		textBoxIntervalRight->Name = L"textBoxIntervalRight";
+		textBoxIntervalRight->Location = Point(335, 47);
+		textBoxIntervalRight->Width = 90;
+		textBoxIntervalRight->TabIndex = 16;
+		panelFifth->Controls->Add(textBoxIntervalRight);
+		SetSolutionLocked(false);
+	}
+
+	void MyForm::SetSolutionLocked(bool locked)
+	{
+		for each (Control^ panel in panelEquationHost->Controls)
+		{
+			for each (Control^ control in panel->Controls)
+			{
+				TextBox^ coefficient = dynamic_cast<TextBox^>(control);
+				if (coefficient != nullptr)
+				{
+					coefficient->ReadOnly = locked;
+				}
+			}
+		}
+		comboBoxDegree->Enabled = !locked;
+		buttonSolve->Visible = !locked;
+		buttonReset->Visible = locked;
+		// Enter solves during editing, but must not accidentally reset a result.
+		AcceptButton = locked ? nullptr : buttonSolve;
+		if (locked)
+		{
+			buttonReset->BringToFront();
+			buttonReset->Focus();
+		}
+		else
+		{
+			buttonSolve->BringToFront();
+		}
+	}
+
+	System::Void MyForm::buttonReset_Click(System::Object^ sender, System::EventArgs^ e)
+	{
+		labelResult->Text = L"Результат:";
+		graphPanel->ClearGraph();
+		SetSolutionLocked(false);
+		for each (Control^ panel in panelEquationHost->Controls)
+		{
+			if (panel->Visible)
+			{
+				panel->SelectNextControl(nullptr, true, true, false, false);
+				break;
+			}
+		}
+	}
+
 	void MyForm::ShowPolynomial(cli::array<double>^ coefficients)
 	{
 		std::vector<double> nativeCoefficients;
@@ -174,6 +263,7 @@ namespace Project1
 		panelCube->Visible = comboBoxDegree->Text == "3";
 		panelQuartic->Visible = comboBoxDegree->Text == "4";
 		panelFifth->Visible = comboBoxDegree->Text == "5";
+		tableLayoutPanel1->RowStyles[1]->Height = panelFifth->Visible ? 112.0F : 76.0F;
 
 		labelResult->Text = L"Результат:";
 		graphPanel->ClearGraph();
@@ -235,14 +325,54 @@ namespace Project1
 
 				FifthEquation^ equation = gcnew FifthEquation(a, b, c, d, e, f);
 
-				labelResult->Text = equation->Solve();
-
-				ShowPolynomial(gcnew cli::array<double> { a, b, c, d, e, f });
+				bool leftMissing = String::IsNullOrWhiteSpace(textBoxIntervalLeft->Text);
+				bool rightMissing = String::IsNullOrWhiteSpace(textBoxIntervalRight->Text);
+				if (leftMissing || rightMissing)
+				{
+					labelResult->Text = leftMissing && rightMissing
+						? L"Введите левую и правую границы отрезка!"
+						: (leftMissing ? L"Введите левую границу отрезка!"
+							: L"Введите правую границу отрезка!");
+					graphPanel->ClearGraph();
+					(leftMissing ? textBoxIntervalLeft : textBoxIntervalRight)->Focus();
+					return;
+				}
+				double left;
+				double right;
+				if (!Double::TryParse(textBoxIntervalLeft->Text, left))
+				{
+					labelResult->Text = L"Левая граница должна быть числом!";
+					graphPanel->ClearGraph();
+					textBoxIntervalLeft->Focus();
+					return;
+				}
+				if (!Double::TryParse(textBoxIntervalRight->Text, right))
+				{
+					labelResult->Text = L"Правая граница должна быть числом!";
+					graphPanel->ClearGraph();
+					textBoxIntervalRight->Focus();
+					return;
+				}
+				double root = equation->Solve(left, right);
+				labelResult->Text = String::Format(L"Корень на [{0}; {1}]: x ≈ {2:G10}", left, right, root);
+				graphPanel->SetPolynomial(gcnew cli::array<double> { a, b, c, d, e, f },
+					gcnew cli::array<double> { root });
 			}
+			SetSolutionLocked(true);
 		}
 		catch (FormatException^)
 		{
 			labelResult->Text = "Введите только числа!";
+			graphPanel->ClearGraph();
+		}
+		catch (OverflowException^)
+		{
+			labelResult->Text = L"Введённое число слишком велико";
+			graphPanel->ClearGraph();
+		}
+		catch (ArgumentException^ error)
+		{
+			labelResult->Text = error->Message;
 			graphPanel->ClearGraph();
 		}
 	}

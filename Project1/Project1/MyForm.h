@@ -27,6 +27,7 @@ namespace Project1 {
 		{
 			InitializeComponent();
 			InitializeGraphPanel();
+			InitializeSolutionControls();
 			//
 			//TODO: добавьте код конструктора
 			//
@@ -64,6 +65,9 @@ namespace Project1 {
 	private: System::Windows::Forms::Label^ label6;
 	private: System::Windows::Forms::TextBox^ textBoxQuadraticB;
 	private: System::Windows::Forms::Button^ buttonSolve;
+	private: System::Windows::Forms::Button^ buttonReset;
+	private: System::Windows::Forms::TextBox^ textBoxIntervalLeft;
+	private: System::Windows::Forms::TextBox^ textBoxIntervalRight;
 	private: System::Windows::Forms::Label^ labelResult;
 	private: System::Windows::Forms::Panel^ panelCube;
 	private: System::Windows::Forms::Label^ label11;
@@ -797,6 +801,9 @@ namespace Project1 {
 #pragma endregion
 	private:
 		void InitializeGraphPanel();
+		void InitializeSolutionControls();
+		void SetSolutionLocked(bool locked);
+		System::Void buttonReset_Click(System::Object^ sender, System::EventArgs^ e);
 		void ShowPolynomial(cli::array<double>^ coefficients);
 		System::Void comboBoxDegree_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e);
 		System::Void buttonSolve_Click(System::Object^ sender, System::EventArgs^ e);
