@@ -68,6 +68,7 @@ namespace Project1 {
 	private: System::Windows::Forms::Button^ buttonReset;
 	private: System::Windows::Forms::TextBox^ textBoxIntervalLeft;
 	private: System::Windows::Forms::TextBox^ textBoxIntervalRight;
+	private: System::Windows::Forms::Panel^ panelInterval;
 	private: System::Windows::Forms::Label^ labelResult;
 	private: System::Windows::Forms::Panel^ panelCube;
 	private: System::Windows::Forms::Label^ label11;

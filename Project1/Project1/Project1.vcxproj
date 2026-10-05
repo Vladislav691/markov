@@ -150,6 +150,7 @@
   <ItemGroup>
     <ClInclude Include="CubeEquation.h" />
     <ClInclude Include="FifthEquation.h" />
+    <ClInclude Include="PolynomialIntervalSolver.h" />
     <ClInclude Include="GraphPanel.h" />
     <ClInclude Include="LinearEquation.h" />
     <ClInclude Include="MyForm.h">

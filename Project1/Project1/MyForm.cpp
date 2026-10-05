@@ -168,29 +168,36 @@ namespace Project1
 		buttonReset->UseVisualStyleBackColor = true;
 		buttonReset->Click += gcnew EventHandler(this, &MyForm::buttonReset_Click);
 		buttonHost->Controls->Add(buttonReset);
+		panelInterval = gcnew Panel();
+		panelInterval->Name = L"panelInterval";
+		panelInterval->Dock = DockStyle::Bottom;
+		panelInterval->Height = 36;
+		panelInterval->Visible = false;
+		panelEquation->Controls->Add(panelInterval);
+		panelInterval->SendToBack();
 		Label^ labelLeft = gcnew Label();
 		labelLeft->Text = L"Левая граница:";
 		labelLeft->AutoSize = true;
-		labelLeft->Location = Point(11, 50);
-		panelFifth->Controls->Add(labelLeft);
+		labelLeft->Location = Point(11, 8);
+		panelInterval->Controls->Add(labelLeft);
 		textBoxIntervalLeft = gcnew TextBox();
 		textBoxIntervalLeft->Name = L"textBoxIntervalLeft";
-		textBoxIntervalLeft->Location = Point(115, 47);
+		textBoxIntervalLeft->Location = Point(115, 5);
 		textBoxIntervalLeft->Width = 90;
 		textBoxIntervalLeft->TabIndex = 15;
-		panelFifth->Controls->Add(textBoxIntervalLeft);
+		panelInterval->Controls->Add(textBoxIntervalLeft);
 
 		Label^ labelRight = gcnew Label();
 		labelRight->Text = L"Правая граница:";
 		labelRight->AutoSize = true;
-		labelRight->Location = Point(225, 50);
-		panelFifth->Controls->Add(labelRight);
+		labelRight->Location = Point(225, 8);
+		panelInterval->Controls->Add(labelRight);
 		textBoxIntervalRight = gcnew TextBox();
 		textBoxIntervalRight->Name = L"textBoxIntervalRight";
-		textBoxIntervalRight->Location = Point(335, 47);
+		textBoxIntervalRight->Location = Point(335, 5);
 		textBoxIntervalRight->Width = 90;
 		textBoxIntervalRight->TabIndex = 16;
-		panelFifth->Controls->Add(textBoxIntervalRight);
+		panelInterval->Controls->Add(textBoxIntervalRight);
 		SetSolutionLocked(false);
 	}
 
@@ -207,6 +214,8 @@ namespace Project1
 				}
 			}
 		}
+		textBoxIntervalLeft->ReadOnly = locked;
+		textBoxIntervalRight->ReadOnly = locked;
 		comboBoxDegree->Enabled = !locked;
 		buttonSolve->Visible = !locked;
 		buttonReset->Visible = locked;
@@ -263,7 +272,10 @@ namespace Project1
 		panelCube->Visible = comboBoxDegree->Text == "3";
 		panelQuartic->Visible = comboBoxDegree->Text == "4";
 		panelFifth->Visible = comboBoxDegree->Text == "5";
-		tableLayoutPanel1->RowStyles[1]->Height = panelFifth->Visible ? 112.0F : 76.0F;
+		bool needsInterval = comboBoxDegree->SelectedIndex >= 1;
+		if (panelInterval != nullptr)
+			panelInterval->Visible = needsInterval;
+		tableLayoutPanel1->RowStyles[1]->Height = needsInterval ? 112.0F : 76.0F;
 
 		labelResult->Text = L"Результат:";
 		graphPanel->ClearGraph();
@@ -281,50 +293,38 @@ namespace Project1
 				labelResult->Text = equation->Solve();
 				ShowPolynomial(gcnew cli::array<double> { a, b });
 			}
-			else if (comboBoxDegree->Text == "2")
+			else
 			{
-				double a = Double::Parse(textBoxQuadraticA->Text);
-				double b = Double::Parse(textBoxQuadraticB->Text);
-				double c = Double::Parse(textBoxQuadraticC->Text);
-
-				QuadraticEquation^ equation = gcnew QuadraticEquation(a, b, c);
-				labelResult->Text = equation->Solve();
-				ShowPolynomial(gcnew cli::array<double> { a, b, c });
-			}
-			else if (comboBoxDegree->Text == "3")
-			{
-				double a = Double::Parse(textBoxCubeA->Text);
-				double b = Double::Parse(textBoxCubeB->Text);
-				double c = Double::Parse(textBoxCubeC->Text);
-				double d = Double::Parse(textBoxCubeD->Text);
-
-				CubeEquation^ equation = gcnew CubeEquation(a, b, c, d);
-				labelResult->Text = equation->Solve();
-				ShowPolynomial(gcnew cli::array<double> { a, b, c, d });
-			}
-			else if (comboBoxDegree->Text == "4")
-			{
-				double a = Double::Parse(textBoxQuarticA->Text);
-				double b = Double::Parse(textBoxQuarticB->Text);
-				double c = Double::Parse(textBoxQuarticC->Text);
-				double d = Double::Parse(textBoxQuarticD->Text);
-				double e = Double::Parse(textBoxQuarticE->Text);
-
-				QuarticEquation^ equation = gcnew QuarticEquation();
-				labelResult->Text = equation->solveQuarticFerrari(a, b, c, d, e);
-				ShowPolynomial(gcnew cli::array<double> { a, b, c, d, e });
-			}
-			else if (comboBoxDegree->Text == "5")
-			{
-				double a = Double::Parse(textBoxFifthA->Text);
-				double b = Double::Parse(textBoxFifthB->Text);
-				double c = Double::Parse(textBoxFifthC->Text);
-				double d = Double::Parse(textBoxFifthD->Text);
-				double e = Double::Parse(textBoxFifthE->Text);
-				double f = Double::Parse(textBoxFifthF->Text);
-
-				FifthEquation^ equation = gcnew FifthEquation(a, b, c, d, e, f);
-
+				cli::array<TextBox^>^ fields;
+				switch (comboBoxDegree->SelectedIndex)
+				{
+				case 1:
+				{
+					fields = gcnew cli::array<TextBox^> { textBoxQuadraticA, textBoxQuadraticB, textBoxQuadraticC };
+					break;
+				}
+				case 2:
+				{
+					fields = gcnew cli::array<TextBox^> { textBoxCubeA, textBoxCubeB, textBoxCubeC, textBoxCubeD };
+					break;
+				}
+				case 3:
+				{
+					fields = gcnew cli::array<TextBox^> { textBoxQuarticA, textBoxQuarticB, textBoxQuarticC, textBoxQuarticD, textBoxQuarticE };
+					break;
+				}
+				case 4:
+				{
+					fields = gcnew cli::array<TextBox^> { textBoxFifthA, textBoxFifthB, textBoxFifthC, textBoxFifthD, textBoxFifthE, textBoxFifthF };
+					break;
+				}
+				default:
+					throw gcnew ArgumentException(L"Выберите степень уравнения");
+				}
+				cli::array<double>^ coefficients = gcnew cli::array<double>(fields->Length);
+				for (int i = 0; i < fields->Length; ++i)
+					coefficients[i] = Double::Parse(fields[i]->Text);
+				PolynomialIntervalSolver^ equation = gcnew PolynomialIntervalSolver(coefficients);
 				bool leftMissing = String::IsNullOrWhiteSpace(textBoxIntervalLeft->Text);
 				bool rightMissing = String::IsNullOrWhiteSpace(textBoxIntervalRight->Text);
 				if (leftMissing || rightMissing)
@@ -355,7 +355,7 @@ namespace Project1
 				}
 				double root = equation->Solve(left, right);
 				labelResult->Text = String::Format(L"Корень на [{0}; {1}]: x ≈ {2:G10}", left, right, root);
-				graphPanel->SetPolynomial(gcnew cli::array<double> { a, b, c, d, e, f },
+				graphPanel->SetPolynomial(coefficients,
 					gcnew cli::array<double> { root });
 			}
 			SetSolutionLocked(true);
