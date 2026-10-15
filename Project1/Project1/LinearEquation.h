@@ -1,28 +1,45 @@
 #pragma once
 
-using namespace System;
-public ref class LinearEquation
+#include <cmath>
+
+#include "EquationSolver.h"
+
+namespace PolynomialSolver
 {
-private:
-	double a;
-	double b;
-public:
-	LinearEquation(double a, double b)
-	{
-		this->a = a;
-		this->b = b;
-	}
-	String^ Solve()
-	{
-		if (a == 0 && b == 0)
-		{
-			return "Бесконечно много решений";
-		}
-		if (a == 0)
-		{
-			return "решений нет";
-		}
-		double x = -b / a;
-		return String::Format("x = {0}", x);
-	}
-};
+    using namespace std;
+
+    class LinearEquation final : public EquationSolver
+    {
+    public:
+        Solution Solve(const Polynomial& polynomial) const override
+        {
+            if (polynomial.Degree() != 1)
+            {
+                throw gcnew System::ArgumentException(L"Ожидается линейное уравнение.");
+            }
+
+            double a = polynomial.Coefficients()[0];
+            double b = polynomial.Coefficients()[1];
+            Solution result;
+
+            if (a == 0)
+            {
+                if (b == 0)
+                {
+                    result.kind = SolutionKind::Infinite;
+                }
+                else
+                {
+                    result.kind = SolutionKind::None;
+                }
+            }
+            else
+            {
+                double x = -b / a;
+                result.roots.push_back(x);
+            }
+
+            return result;
+        }
+    };
+}

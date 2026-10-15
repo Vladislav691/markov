@@ -1,171 +1,108 @@
 #pragma once
 
 #include <cmath>
-#include <complex>
 
-using namespace System;
-using namespace std;
+#include "CubeEquation.h"
+#include "EquationSolver.h"
+#include "QuadraticEquation.h"
 
-public ref class QuarticEquation
+namespace PolynomialSolver
 {
-private:
+    using namespace std;
 
-    complex<double> solveCubicResolvent(
-        complex<double> A,
-        complex<double> B,
-        complex<double> C,
-        complex<double> D)
+    class QuarticEquation final : public EquationSolver
     {
-        complex<double> p =
-            (3.0 * A * C - B * B) /
-            (3.0 * A * A);
-
-        complex<double> q =
-            (2.0 * B * B * B
-                - 9.0 * A * B * C
-                + 27.0 * A * A * D) /
-            (27.0 * A * A * A);
-
-        complex<double> delta =
-            (q * q / 4.0) +
-            (p * p * p / 27.0);
-
-        complex<double> r1 =
-            -q / 2.0 + sqrt(delta);
-
-        complex<double> r2 =
-            -q / 2.0 - sqrt(delta);
-
-        complex<double> u =
-            pow(r1, 1.0 / 3.0);
-
-        // Оба кубических корня должны удовлетворять условию u * v = -p / 3.
-        complex<double> v =
-            abs(u) == 0.0 ? pow(r2, 1.0 / 3.0) : -p / (3.0 * u);
-
-        return u + v - (B / (3.0 * A));
-    }
-
-
-public:
-
-    String^ solveQuarticFerrari(
-        double a,
-        double b,
-        double c,
-        double d,
-        double e)
-    {
-        if (a == 0)
+    public:
+        Solution Solve(const Polynomial& polynomial) const override
         {
-            System::Windows::Forms::MessageBox::Show(
-                "Коэффициент 'a' не должен быть равен 0.",
-                "Ошибка",
-                System::Windows::Forms::MessageBoxButtons::OK,
-                System::Windows::Forms::MessageBoxIcon::Error
-            );
+            if (polynomial.Degree() != 4)
+            {
+                throw gcnew System::ArgumentException(L"Ожидается уравнение четвёртой степени.");
+            }
 
-            return nullptr;
+            double a = polynomial.Coefficients()[0];
+            double b = polynomial.Coefficients()[1];
+            double c = polynomial.Coefficients()[2];
+            double d = polynomial.Coefficients()[3];
+            double e = polynomial.Coefficients()[4];
+
+            double A = b / a;
+            double B = c / a;
+            double C = d / a;
+            double E = e / a;
+
+            double p = B - 3 * A * A / 8;
+            double q = A * A * A / 8 - A * B / 2 + C;
+            double r = -3 * A * A * A * A / 256 + A * A * B / 16 - A * C / 4 + E;
+
+            if (!isfinite(p) || !isfinite(q) || !isfinite(r))
+            {
+                throw gcnew System::OverflowException(L"Переполнение при вычислении по методу Феррари.");
+            }
+
+            double shift = A / 4;
+            Solution result;
+
+            if (q == 0)
+            {
+                Polynomial equation({1, p, r});
+                QuadraticEquation solver;
+                Solution squared = solver.Solve(equation);
+
+                Complex y1 = sqrt(squared.roots[0]);
+                Complex y2 = sqrt(squared.roots[1]);
+
+                Complex x1 = y1 - shift;
+                Complex x2 = -y1 - shift;
+                Complex x3 = y2 - shift;
+                Complex x4 = -y2 - shift;
+
+                result.roots.push_back(x1);
+                result.roots.push_back(x2);
+                result.roots.push_back(x3);
+                result.roots.push_back(x4);
+            }
+            else
+            {
+                Polynomial equation({1, 2 * p, p * p - 4 * r, -q * q});
+                CubeEquation solver;
+                Solution resolvent = solver.Solve(equation);
+
+                Complex z = resolvent.roots[0];
+
+                for (Complex root : resolvent.roots)
+                {
+                    if (abs(root) > abs(z))
+                    {
+                        z = root;
+                    }
+                }
+
+                Complex s = sqrt(z);
+
+                if (abs(s) == 0)
+                {
+                    throw gcnew System::InvalidOperationException(
+                        L"Не удалось вычислить резольвенту Феррари.");
+                }
+
+                Complex t = (p + z - q / s) / 2.0;
+                Complex u = (p + z + q / s) / 2.0;
+                Complex first = sqrt(z - 4.0 * t);
+                Complex second = sqrt(z - 4.0 * u);
+
+                Complex x1 = (-s + first) / 2.0 - shift;
+                Complex x2 = (-s - first) / 2.0 - shift;
+                Complex x3 = (s + second) / 2.0 - shift;
+                Complex x4 = (s - second) / 2.0 - shift;
+
+                result.roots.push_back(x1);
+                result.roots.push_back(x2);
+                result.roots.push_back(x3);
+                result.roots.push_back(x4);
+            }
+
+            return result;
         }
-
-        double p =
-            (8.0 * a * c - 3.0 * b * b) /
-            (8.0 * a * a);
-
-        double q =
-            (8.0 * a * a * d
-                - 4.0 * a * b * c
-                + b * b * b) /
-            (8.0 * a * a * a);
-
-        double r =
-            (16.0 * a * b * b * c
-                - 64.0 * a * a * b * d
-                - 3.0 * b * b * b * b
-                + 256.0 * a * a * a * e) /
-            (256.0 * a * a * a * a);
-
-        double shift = b / (4.0 * a);
-
-        complex<double> roots[4];
-
-        if (q == 0.0)
-        {
-            complex<double> disc =
-                p * p - 4.0 * r;
-
-            complex<double> y2_1 =
-                (-p + sqrt(disc)) / 2.0;
-
-            complex<double> y2_2 =
-                (-p - sqrt(disc)) / 2.0;
-
-            roots[0] = sqrt(y2_1) - shift;
-            roots[1] = -sqrt(y2_1) - shift;
-            roots[2] = sqrt(y2_2) - shift;
-            roots[3] = -sqrt(y2_2) - shift;
-        }
-        else
-        {
-            complex<double> s =
-                solveCubicResolvent(
-                    8.0,
-                    -4.0 * p,
-                    -8.0 * r,
-                    4.0 * p * r - q * q
-                );
-
-            complex<double> sqrt_2s_p =
-                sqrt(2.0 * s - p);
-
-            complex<double> q_div_2s =
-                q / (2.0 * sqrt_2s_p);
-
-            complex<double> k1_b =
-                sqrt_2s_p;
-
-            complex<double> k1_c =
-                s - q_div_2s;
-
-            complex<double> disc1 =
-                k1_b * k1_b - 4.0 * k1_c;
-
-            roots[0] =
-                (-k1_b + sqrt(disc1)) / 2.0 - shift;
-
-            roots[1] =
-                (-k1_b - sqrt(disc1)) / 2.0 - shift;
-
-
-            complex<double> k2_b =
-                -sqrt_2s_p;
-
-            complex<double> k2_c =
-                s + q_div_2s;
-
-            complex<double> disc2 =
-                k2_b * k2_b - 4.0 * k2_c;
-
-            roots[2] =
-                (-k2_b + sqrt(disc2)) / 2.0 - shift;
-
-            roots[3] =
-                (-k2_b - sqrt(disc2)) / 2.0 - shift;
-        }
-
-        String^ result = String::Format(
-            "Корни уравнения:\n"
-            "x1 = {0:G10} + ({1:G10})i\n"
-            "x2 = {2:G10} + ({3:G10})i\n"
-            "x3 = {4:G10} + ({5:G10})i\n"
-            "x4 = {6:G10} + ({7:G10})i",
-
-            roots[0].real(), roots[0].imag(),
-            roots[1].real(), roots[1].imag(),
-            roots[2].real(), roots[2].imag(),
-            roots[3].real(), roots[3].imag()
-        );
-
-        return result;
-    }
-};
+    };
+}

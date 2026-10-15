@@ -1,55 +1,53 @@
 #pragma once
 
-using namespace System;
-using namespace System::Windows::Forms;
-using namespace System::Drawing;
-
 namespace PolynomialSolver
 {
-namespace UI
-{
-    public ref class GraphPanel sealed : public Panel
+    namespace UI
     {
-    public:
-        GraphPanel();
+        using namespace System;
+        using namespace System::Drawing;
+        using namespace System::Windows::Forms;
 
-        void SetPolynomial(
-            cli::array<double>^ coefficients,
-            cli::array<double>^ realRoots);
+        public ref class GraphPanel sealed : public Panel
+        {
+        public:
+            GraphPanel();
 
-        void ClearGraph();
-        void ResetView();
+            void SetPolynomial(cli::array<double>^ coefficients, cli::array<double>^ realRoots);
+            void ClearGraph();
+            void ResetView();
 
-    protected:
-        virtual void OnPaint(PaintEventArgs^ e) override;
-        virtual void OnMouseWheel(MouseEventArgs^ e) override;
-        virtual void OnMouseEnter(EventArgs^ e) override;
-        virtual void OnResize(EventArgs^ e) override;
-        virtual void OnMouseDown(MouseEventArgs^ e) override;
-        virtual void OnMouseMove(MouseEventArgs^ e) override;
-        virtual void OnMouseUp(MouseEventArgs^ e) override;
-        virtual void OnMouseCaptureChanged(EventArgs^ e) override;
+        protected:
+            virtual void OnPaint(PaintEventArgs^ e) override;
+            virtual void OnMouseWheel(MouseEventArgs^ e) override;
+            virtual void OnMouseEnter(EventArgs^ e) override;
+            virtual void OnResize(EventArgs^ e) override;
+            virtual void OnMouseDown(MouseEventArgs^ e) override;
+            virtual void OnMouseMove(MouseEventArgs^ e) override;
+            virtual void OnMouseUp(MouseEventArgs^ e) override;
+            virtual void OnMouseCaptureChanged(EventArgs^ e) override;
 
-    private:
-        cli::array<double>^ coefficients_;
-        cli::array<double>^ realRoots_;
+        private:
+            literal double MinimumScale = 1e-306;
+            literal double MaximumScale = 1e100;
 
-        double scaleX_;
-        double scaleY_;
-        double originX_;
-        double originY_;
+            cli::array<double>^ coefficients_;
+            cli::array<double>^ realRoots_;
 
-        int previousWidth_;
-        int previousHeight_;
-        bool fitPending_;
+            double scaleX_;
+            double scaleY_;
+            double originX_;
+            double originY_;
 
-        bool dragging_;
-        Point lastMousePoint_;
+            int previousWidth_;
+            int previousHeight_;
+            bool fitPending_;
+            bool dragging_;
+            Point lastMousePoint_;
 
-        double Evaluate(double x);
-
-        static double GridStep(double pixelsPerUnit);
-        static String^ TickText(double value, double step);
-    };
-}
+            double Evaluate(double x);
+            static double GridStep(double pixelsPerUnit);
+            static String^ TickText(double value, double step);
+        };
+    }
 }

@@ -1,67 +1,102 @@
 #pragma once
+
 #include <cmath>
-using namespace System;
-public ref class CubeEquation
+
+#include "EquationSolver.h"
+
+namespace PolynomialSolver
 {
-private:
-	double a, b, c, d;
-	double cbrt_real(double x)
-	{
-		return (x < 0) ? -pow(-x, 1.0 / 3.0) : pow(x, 1.0 / 3.0);
-	}
-public:
-	CubeEquation(double a, double b, double c, double d)
-	{
-		this->a = a;
-		this->b = b;
-		this->c = c;
-		this->d = d;
-	}
-	String^ Solve()
-	{
-		//проверка на корректность
-		if (a == 0)
-		{
-			return "Ошибка: 'a'не должно быть равно 0";
-		}
-		double A = b / a;
-		double B = c / a;
-		double C = d / a;
+    using namespace std;
 
-		double p = B - (A * A) / 3.0;
-		double q = C - (A * B) / 3.0 + (2.0 * A * A * A) / 27.0;
-		double D = (q * q) / 4.0 + (p * p * p) / 27.0;
+    class CubeEquation final : public EquationSolver
+    {
+    public:
+        Solution Solve(const Polynomial& polynomial) const override
+        {
+            if (polynomial.Degree() != 3)
+            {
+                throw gcnew System::ArgumentException(L"Ожидается кубическое уравнение.");
+            }
 
-		double shift = A / 3.0;
-		
-		String^ result = "";
-		if (D > 0)
-		{
-			double u = cbrt_real(-q / 2.0 + sqrt(D));
-			double v = cbrt_real(-q / 2.0 - sqrt(D));
+            double a = polynomial.Coefficients()[0];
+            double b = polynomial.Coefficients()[1];
+            double c = polynomial.Coefficients()[2];
+            double d = polynomial.Coefficients()[3];
 
-			double realPart1 = (u + v) - shift;
-			double realPart23 = -0.5 * (u + v) - shift;
-			double imagPart = (u - v) * sqrt(3.0) / 2.0;
-			result += "x1 = " + realPart1.ToString("G10") + "\n";
-			result += "x2 = " + realPart23.ToString("G10") + " + " + abs(imagPart).ToString("G10") + "i\n";
-			result += "x3 = " + realPart23.ToString("G10") + " - " + abs(imagPart).ToString("G10") + "i\n";
-		}
-		else
-		{
-			double r = sqrt(-(p * p * p) / 27.0);
-			double phi = (r == 0) ? 0 : acos(Math::Max(-1.0, Math::Min(1.0, -q / (2.0 * r))));
-			double factor = 2.0 * cbrt_real(r);
+            double A = b / a;
+            double B = c / a;
+            double C = d / a;
 
-			double x1 = factor * cos(phi / 3.0) - shift;
-			double x2 = factor * cos((phi + 2.0 * Math::PI) / 3.0) - shift;
-			double x3 = factor * cos((phi + 4.0 * Math::PI) / 3.0) - shift;
+            double p = B - A * A / 3;
+            double q = 2 * A * A * A / 27 - A * B / 3 + C;
+            double D = q * q / 4 + p * p * p / 27;
 
-			result += "x1 = " + x1.ToString("G10") + "\n";
-			result += "x2 = " + x2.ToString("G10") + "\n";
-			result += "x3 = " + x3.ToString("G10") + "\n";
-		}
-		return result;
-		
-	}
-};
+            if (!isfinite(D))
+            {
+                throw gcnew System::OverflowException(L"Переполнение при вычислении по формуле Кардано.");
+            }
+
+            double shift = A / 3;
+            Solution result;
+
+            if (D >= 0)
+            {
+                double u;
+
+                if (q >= 0)
+                {
+                    u = cbrt(-q / 2 - sqrt(D));
+                }
+                else
+                {
+                    u = cbrt(-q / 2 + sqrt(D));
+                }
+
+                double v = 0;
+
+                if (u != 0)
+                {
+                    v = -p / (3 * u);
+                }
+
+                double x1 = u + v - shift;
+                double realPart = -(u + v) / 2 - shift;
+                double imaginaryPart = sqrt(3.0) * (u - v) / 2;
+
+                Complex x2(realPart, imaginaryPart);
+                Complex x3(realPart, -imaginaryPart);
+
+                result.roots.push_back(x1);
+                result.roots.push_back(x2);
+                result.roots.push_back(x3);
+            }
+            else
+            {
+                double radius = 2 * sqrt(-p / 3);
+                double cosine = -q / (2 * sqrt(-p * p * p / 27));
+
+                if (cosine < -1)
+                {
+                    cosine = -1;
+                }
+                else if (cosine > 1)
+                {
+                    cosine = 1;
+                }
+
+                double angle = acos(cosine);
+                double pi = acos(-1.0);
+
+                double x1 = radius * cos(angle / 3) - shift;
+                double x2 = radius * cos((angle + 2 * pi) / 3) - shift;
+                double x3 = radius * cos((angle + 4 * pi) / 3) - shift;
+
+                result.roots.push_back(x1);
+                result.roots.push_back(x2);
+                result.roots.push_back(x3);
+            }
+
+            return result;
+        }
+    };
+}

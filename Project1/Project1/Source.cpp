@@ -1,6 +1,8 @@
-#include "MyForm.h"
 #include <clocale>
 
+#include "MyForm.h"
+
+using namespace std;
 using namespace System;
 using namespace System::Windows::Forms;
 

@@ -30,7 +30,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CLRSupport>true</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -79,7 +79,7 @@
       <EnableSegmentHeap>true</EnableSegmentHeap>
     </Manifest>
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel><LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -94,7 +94,7 @@
       <EnableSegmentHeap>true</EnableSegmentHeap>
     </Manifest>
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel><LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -109,7 +109,7 @@
       <EnableSegmentHeap>true</EnableSegmentHeap>
     </Manifest>
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel><LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -124,7 +124,7 @@
       <EnableSegmentHeap>true</EnableSegmentHeap>
     </Manifest>
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel><LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -144,13 +144,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphPanel.cpp" />
-    <ClCompile Include="MyForm.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CubeEquation.h" />
-    <ClInclude Include="FifthEquation.h" />
-    <ClInclude Include="PolynomialIntervalSolver.h" />
+
+
+    <ClInclude Include="Polynomial.h" />
+    <ClInclude Include="EquationSolver.h" />
+    <ClInclude Include="BisectionSolver.h" />
+    <ClInclude Include="ResultFormatter.h" />
     <ClInclude Include="GraphPanel.h" />
     <ClInclude Include="LinearEquation.h" />
     <ClInclude Include="MyForm.h">
