@@ -1085,7 +1085,7 @@ namespace Project1
                 SearchSettings settings;
                 settings.left = ReadNumber(textBoxIntervalLeft, L"Левая граница");
                 settings.right = ReadNumber(textBoxIntervalRight, L"Правая граница");
-                settings.step = ReadNumber(textBoxSearchStep, L"Шаг поиска");
+                settings.step = 0.1;
                 settings.accuracy = ReadNumber(textBoxAccuracy, L"Точность");
 
                 BisectionSolver solver(settings);

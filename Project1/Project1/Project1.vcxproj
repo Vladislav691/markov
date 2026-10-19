@@ -79,7 +79,8 @@
       <EnableSegmentHeap>true</EnableSegmentHeap>
     </Manifest>
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel><LanguageStandard>stdcpp17</LanguageStandard>
+      <WarningLevel>Level4</WarningLevel>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -94,7 +95,8 @@
       <EnableSegmentHeap>true</EnableSegmentHeap>
     </Manifest>
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel><LanguageStandard>stdcpp17</LanguageStandard>
+      <WarningLevel>Level4</WarningLevel>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -109,7 +111,8 @@
       <EnableSegmentHeap>true</EnableSegmentHeap>
     </Manifest>
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel><LanguageStandard>stdcpp17</LanguageStandard>
+      <WarningLevel>Level4</WarningLevel>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -124,7 +127,8 @@
       <EnableSegmentHeap>true</EnableSegmentHeap>
     </Manifest>
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel><LanguageStandard>stdcpp17</LanguageStandard>
+      <WarningLevel>Level4</WarningLevel>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -144,12 +148,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphPanel.cpp" />
+    <ClCompile Include="SearchSettingsForm.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CubeEquation.h" />
-
-
     <ClInclude Include="Polynomial.h" />
     <ClInclude Include="EquationSolver.h" />
     <ClInclude Include="BisectionSolver.h" />
@@ -161,10 +164,17 @@
     </ClInclude>
     <ClInclude Include="QuadraticEquation.h" />
     <ClInclude Include="QuarticEquation.h" />
+    <ClInclude Include="SearchSettings.h" />
+    <ClInclude Include="SearchSettingsForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MyForm.resx">
       <DependentUpon>MyForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SearchSettingsForm.resx">
+      <DependentUpon>SearchSettingsForm.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
