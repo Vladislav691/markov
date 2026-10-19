@@ -28,6 +28,10 @@ namespace PolynomialSolver
             virtual void OnMouseCaptureChanged(EventArgs^ e) override;
 
         private:
+            literal int MaximumGridLines = 500;
+            literal int FitSampleCount = 200;
+            literal double MaximumScreenCoordinate = 100000.0;
+
             literal double MinimumScale = 1e-306;
             literal double MaximumScale = 1e100;
 
@@ -44,6 +48,12 @@ namespace PolynomialSolver
             bool fitPending_;
             bool dragging_;
             Point lastMousePoint_;
+
+            void DrawGrid(Graphics^ graphics, Pen^ gridPen);
+            void DrawAxes(Graphics^ graphics, Pen^ axisPen);
+            void DrawCurve(Graphics^ graphics, Pen^ curvePen);
+            void DrawRoots(Graphics^ graphics, Brush^ rootBrush);
+            void DrawLabels(Graphics^ graphics);
 
             double Evaluate(double x);
             static double GridStep(double pixelsPerUnit);

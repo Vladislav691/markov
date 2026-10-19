@@ -4,11 +4,16 @@
 
 namespace PolynomialSolver
 {
+    using namespace std;
+
     struct SearchSettings
     {
+        static constexpr double SearchStep = 0.1;
+        static constexpr int MaximumIntervals = 1000000;
+
         double left = -10;
         double right = 10;
-        double step = 0.1;
+        double step = SearchStep;
         double accuracy = 1e-6;
 
         void Validate() const
@@ -30,10 +35,10 @@ namespace PolynomialSolver
                 throw gcnew System::ArgumentException(L"Точность должна быть больше нуля.");
             }
             const double count = (right - left) / step;
-            if (!isfinite(count) || count > 1000000)
+            if (!isfinite(count) || count > MaximumIntervals)
             {
                 throw gcnew System::ArgumentException(
-                    L"Слишком много участков поиска (максимум 1 000 000). Увеличьте шаг.");
+                    L"Слишком много участков поиска (максимум 1 000 000). Уменьшите диапазон поиска.");
             }
             if (left + step == left && step < right - left)
             {

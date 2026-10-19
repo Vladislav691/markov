@@ -8,6 +8,8 @@ namespace PolynomialSolver
 {
     using namespace std;
 
+    constexpr double VerificationTolerance = 1e-8;
+
     enum class SolutionKind
     {
         Finite,
@@ -19,7 +21,6 @@ namespace PolynomialSolver
     {
         SolutionKind kind = SolutionKind::Finite;
         vector<Complex> roots;
-        vector<double> residuals;
         bool verified = false;
     };
 
@@ -32,7 +33,6 @@ namespace PolynomialSolver
 
     inline void VerifySolution(const Polynomial& polynomial, Solution& solution)
     {
-        solution.residuals.clear();
         solution.verified = true;
 
         for (Complex root : solution.roots)
@@ -43,9 +43,8 @@ namespace PolynomialSolver
             }
 
             double residual = polynomial.RelativeResidual(root);
-            solution.residuals.push_back(residual);
 
-            if (residual > 1e-8)
+            if (residual > VerificationTolerance)
             {
                 solution.verified = false;
             }

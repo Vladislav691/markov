@@ -126,9 +126,9 @@ namespace PolynomialSolver
 
             double maximumAbsoluteY = 1.0;
 
-            for (int i = 0; i <= 200; ++i)
+            for (int i = 0; i <= FitSampleCount; ++i)
             {
-                const double x = sampleStart + (sampleEnd - sampleStart) * i / 200.0;
+                const double x = sampleStart + (sampleEnd - sampleStart) * i / FitSampleCount;
 
                 const double y = Evaluate(x);
 
@@ -177,28 +177,35 @@ namespace PolynomialSolver
                 return;
             }
 
-            const double minimumX = Math::Max(-Double::MaxValue, -originX_ / scaleX_);
-
-            const double maximumX = Math::Min(Double::MaxValue, (Width - originX_) / scaleX_);
-
-            const double minimumY = Math::Max(-Double::MaxValue, (originY_ - Height) / scaleY_);
-
-            const double maximumY = Math::Min(Double::MaxValue, originY_ / scaleY_);
-
             Pen^ gridPen = gcnew Pen(Color::FromArgb(232, 236, 242));
-
             Pen^ axisPen = gcnew Pen(Color::FromArgb(112, 122, 137), 1.5f);
-
             Pen^ curvePen = gcnew Pen(Color::FromArgb(37, 99, 235), 2.5f);
-
             SolidBrush^ rootBrush = gcnew SolidBrush(Color::FromArgb(220, 53, 69));
 
+            DrawGrid(graphics, gridPen);
+            DrawAxes(graphics, axisPen);
+            DrawCurve(graphics, curvePen);
+            DrawRoots(graphics, rootBrush);
+            DrawLabels(graphics);
+
+            delete gridPen;
+            delete axisPen;
+            delete curvePen;
+            delete rootBrush;
+        }
+
+        void GraphPanel::DrawGrid(Graphics^ graphics, Pen^ gridPen)
+        {
+            const double minimumX = Math::Max(-Double::MaxValue, -originX_ / scaleX_);
+            const double maximumX = Math::Min(Double::MaxValue, (Width - originX_) / scaleX_);
+            const double minimumY = Math::Max(-Double::MaxValue, (originY_ - Height) / scaleY_);
+            const double maximumY = Math::Min(Double::MaxValue, originY_ / scaleY_);
             const double xStep = GridStep(scaleX_);
             const double yStep = GridStep(scaleY_);
 
             int count = 0;
 
-            for (double x = Math::Ceiling(minimumX / xStep) * xStep; x <= maximumX && count < 500;
+            for (double x = Math::Ceiling(minimumX / xStep) * xStep; x <= maximumX && count < MaximumGridLines;
                  x += xStep, ++count)
             {
                 const float screenX = static_cast<float>(originX_ + x * scaleX_);
@@ -208,14 +215,17 @@ namespace PolynomialSolver
 
             count = 0;
 
-            for (double y = Math::Ceiling(minimumY / yStep) * yStep; y <= maximumY && count < 500;
+            for (double y = Math::Ceiling(minimumY / yStep) * yStep; y <= maximumY && count < MaximumGridLines;
                  y += yStep, ++count)
             {
                 const float screenY = static_cast<float>(originY_ - y * scaleY_);
 
                 graphics->DrawLine(gridPen, 0.0f, screenY, static_cast<float>(Width), screenY);
             }
+        }
 
+        void GraphPanel::DrawAxes(Graphics^ graphics, Pen^ axisPen)
+        {
             if (originX_ >= 0.0 && originX_ <= Width)
             {
                 const float screenX = static_cast<float>(originX_);
@@ -229,7 +239,10 @@ namespace PolynomialSolver
 
                 graphics->DrawLine(axisPen, 0.0f, screenY, static_cast<float>(Width), screenY);
             }
+        }
 
+        void GraphPanel::DrawCurve(Graphics^ graphics, Pen^ curvePen)
+        {
             PointF previousPoint(0.0f, 0.0f);
             bool hasPreviousPoint = false;
 
@@ -241,7 +254,7 @@ namespace PolynomialSolver
 
                 const double screenY = originY_ - y * scaleY_;
 
-                if (Double::IsNaN(screenY) || Double::IsInfinity(screenY) || Math::Abs(screenY) > 100000.0)
+                if (Double::IsNaN(screenY) || Double::IsInfinity(screenY) || Math::Abs(screenY) > MaximumScreenCoordinate)
                 {
                     hasPreviousPoint = false;
                     continue;
@@ -257,7 +270,10 @@ namespace PolynomialSolver
                 previousPoint = currentPoint;
                 hasPreviousPoint = true;
             }
+        }
 
+        void GraphPanel::DrawRoots(Graphics^ graphics, Brush^ rootBrush)
+        {
             if (realRoots_ != nullptr)
             {
                 System::Collections::Generic::List<double>^ drawnPositions =
@@ -297,14 +313,23 @@ namespace PolynomialSolver
                     drawnPositions->Add(screenX);
                 }
             }
+        }
 
+        void GraphPanel::DrawLabels(Graphics^ graphics)
+        {
+            const double minimumX = Math::Max(-Double::MaxValue, -originX_ / scaleX_);
+            const double maximumX = Math::Min(Double::MaxValue, (Width - originX_) / scaleX_);
+            const double minimumY = Math::Max(-Double::MaxValue, (originY_ - Height) / scaleY_);
+            const double maximumY = Math::Min(Double::MaxValue, originY_ / scaleY_);
+            const double xStep = GridStep(scaleX_);
+            const double yStep = GridStep(scaleY_);
             const float xLabelY =
                 static_cast<float>(Math::Max(2.0, Math::Min(Height - 19.0, originY_ + 4.0)));
 
             float previousRight = -1000.0f;
-            count = 0;
+            int count = 0;
 
-            for (double x = Math::Ceiling(minimumX / xStep) * xStep; x <= maximumX && count < 500;
+            for (double x = Math::Ceiling(minimumX / xStep) * xStep; x <= maximumX && count < MaximumGridLines;
                  x += xStep, ++count)
             {
                 if (Math::Abs(x) < xStep * 1e-8)
@@ -334,7 +359,7 @@ namespace PolynomialSolver
 
             count = 0;
 
-            for (double y = Math::Ceiling(minimumY / yStep) * yStep; y <= maximumY && count < 500;
+            for (double y = Math::Ceiling(minimumY / yStep) * yStep; y <= maximumY && count < MaximumGridLines;
                  y += yStep, ++count)
             {
                 const float screenY = static_cast<float>(originY_ - y * scaleY_);
@@ -352,11 +377,6 @@ namespace PolynomialSolver
 
                 graphics->DrawString(text, Font, Brushes::DimGray, left, top);
             }
-
-            delete gridPen;
-            delete axisPen;
-            delete curvePen;
-            delete rootBrush;
         }
 
         void GraphPanel::OnMouseWheel(MouseEventArgs^ e)
@@ -367,7 +387,6 @@ namespace PolynomialSolver
             }
 
             const double factor = Math::Pow(1.2, e->Delta / 120.0);
-
             const double newScaleX = scaleX_ * factor;
             const double newScaleY = scaleY_ * factor;
 
@@ -487,7 +506,6 @@ namespace PolynomialSolver
         {
             const double desired = 65.0 / pixelsPerUnit;
             const double base = Math::Pow(10.0, Math::Floor(Math::Log10(desired)));
-
             const double ratio = desired / base;
 
             if (ratio <= 1.0)

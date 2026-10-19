@@ -141,6 +141,66 @@ namespace
         Application::DoEvents();
     }
 
+    ref class SettingsDialogAction
+    {
+    public:
+        Timer^ timer;
+        String^ left;
+        String^ right;
+        String^ accuracy;
+        String^ initialLeft;
+        String^ initialAccuracy;
+        bool cancel;
+
+        SettingsDialogAction(String^ leftValue, String^ rightValue, String^ accuracyValue, bool cancelValue)
+        {
+            left = leftValue;
+            right = rightValue;
+            accuracy = accuracyValue;
+            cancel = cancelValue;
+            timer = gcnew Timer();
+            timer->Interval = 50;
+            timer->Tick += gcnew EventHandler(this, &SettingsDialogAction::OnTick);
+        }
+
+        void OnTick(Object^, EventArgs^)
+        {
+            Form^ dialog = Application::OpenForms[L"SearchSettingsForm"];
+            if (dialog == nullptr)
+            {
+                return;
+            }
+            timer->Stop();
+            initialLeft = Field(dialog, L"textBoxLeft")->Text;
+            initialAccuracy = Field(dialog, L"textBoxAccuracy")->Text;
+            Field(dialog, L"textBoxLeft")->Text = left;
+            Field(dialog, L"textBoxRight")->Text = right;
+            Field(dialog, L"textBoxAccuracy")->Text = accuracy;
+            if (cancel)
+            {
+                Click(dialog, L"buttonCancel");
+            }
+            else
+            {
+                Click(dialog, L"buttonApply");
+            }
+        }
+    };
+
+    SettingsDialogAction^ EditSettings(Form^ form, String^ left, String^ right, String^ accuracy, bool cancel)
+    {
+        SettingsDialogAction^ action = gcnew SettingsDialogAction(left, right, accuracy, cancel);
+        try
+        {
+            action->timer->Start();
+            Click(form, L"buttonSearchSettings");
+        }
+        finally
+        {
+            delete action->timer;
+        }
+        return action;
+    }
     void UIFlow()
     {
         Project1::MyForm^ form = gcnew Project1::MyForm();
@@ -175,13 +235,22 @@ namespace
             Click(form, L"buttonReset");
             method->SelectedIndex = 1;
             Check(Find(form, L"panelInterval")->Visible, "numerical fields hidden");
-            Field(form, L"textBoxIntervalLeft")->Text = L"0";
-            Field(form, L"textBoxIntervalRight")->Text = L"4";
-            Field(form, L"textBoxSearchStep")->Text = L"0.3";
-            Field(form, L"textBoxAccuracy")->Text = L"1e-9";
+            Check(Find(form, L"textBoxSearchStep") == nullptr, "step input still exists");
+            Check(Find(form, L"textBoxIntervalLeft") == nullptr, "main settings input still exists");
+            auto defaults = EditSettings(form, L"0", L"4", L"1e-9", false);
+            Check(defaults->initialAccuracy->Replace(L',', L'.') == L"0.000001",
+                  "default accuracy not displayed as decimal");
+            EditSettings(form, L"0", L"4", L"0.000000000001", false);
+            auto minimum = EditSettings(form, L"0", L"4", L"1e-9", false);
+            Check(minimum->initialAccuracy->Replace(L',', L'.') == L"0.000000000001",
+                  "minimum accuracy rounded to zero");
+            auto cancelled = EditSettings(form, L"20", L"30", L"0,5", true);
+            Check(cancelled->initialLeft == L"0", "saved settings not loaded");
+            auto reopened = EditSettings(form, L"20", L"30", L"0.5", true);
+            Check(reopened->initialLeft == L"0", "cancel changed saved settings");
             Click(form, L"buttonSolve");
             Check(result->Text->Contains(L"x3"), "numerical multiple roots missing");
-            Check(Field(form, L"textBoxAccuracy")->ReadOnly, "settings not locked");
+            Check(!Find(form, L"buttonSearchSettings")->Enabled, "settings not locked");
             String^ directory = IO::Path::Combine(AppDomain::CurrentDomain->BaseDirectory, L"previews");
             IO::Directory::CreateDirectory(directory);
             Bitmap^ bitmap = gcnew Bitmap(form->Width, form->Height);
@@ -189,9 +258,7 @@ namespace
             bitmap->Save(IO::Path::Combine(directory, L"cubic-numerical.png"));
             delete bitmap;
             Click(form, L"buttonReset");
-            Field(form, L"textBoxSearchStep")->Text = L"0";
-            Click(form, L"buttonSolve");
-            Check(result->Text->Contains(L"Шаг") && degree->Enabled, "invalid step accepted");
+            Check(Find(form, L"buttonSearchSettings")->Enabled, "settings not unlocked");
             method->SelectedIndex = 0;
             degree->SelectedIndex = 3;
             SetCoefficients(form, L"Quartic", gcnew cli::array<String^>{L"1", L"0", L"0", L"1", L"1"});
@@ -206,9 +273,7 @@ namespace
             degree->SelectedIndex = 4;
             Check(!method->Visible && Find(form, L"panelInterval")->Visible, "fifth visibility");
             SetCoefficients(form, L"Fifth", gcnew cli::array<String^>{L"1", L"0", L"-5", L"0", L"4", L"0"});
-            Field(form, L"textBoxSearchStep")->Text = L"0,2";
-            Field(form, L"textBoxIntervalLeft")->Text = L"-3";
-            Field(form, L"textBoxIntervalRight")->Text = L"3";
+            EditSettings(form, L"-3", L"3", L"0,000000001", false);
             Click(form, L"buttonSolve");
             Check(result->Text->Contains(L"x5"), "fifth roots missing");
             bitmap = gcnew Bitmap(form->Width, form->Height);
