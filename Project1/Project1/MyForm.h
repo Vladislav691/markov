@@ -5,7 +5,7 @@
 #include "BisectionSolver.h"
 #include "CubeEquation.h"
 #include "EquationSolver.h"
-#include "GraphPanel.h"
+#include "GraphForm.h"
 #include "LinearEquation.h"
 #include "QuadraticEquation.h"
 #include "QuarticEquation.h"
@@ -29,7 +29,6 @@ namespace Project1
         MyForm(void)
         {
             InitializeComponent();
-            InitializeGraphPanel();
             InitializeSolutionControls();
         }
 
@@ -63,11 +62,11 @@ namespace Project1
         System::Windows::Forms::Button^ buttonSearchSettings;
         System::Windows::Forms::Panel^ buttonHost;
         System::Windows::Forms::Label^ methodLabel;
-        double searchLeft = -10;
-        double searchRight = 10;
+        double searchLeft = 0;
+        double searchRight = 0;
         double searchAccuracy = 1e-6;
         System::Windows::Forms::Panel^ panelInterval;
-        System::Windows::Forms::Label^ labelResult;
+        System::Windows::Forms::RichTextBox^ richTextBoxHistory;
         System::Windows::Forms::Panel^ panelCube;
         System::Windows::Forms::Label^ label11;
         System::Windows::Forms::TextBox^ textBoxCubeA;
@@ -89,7 +88,14 @@ namespace Project1
         System::Windows::Forms::Label^ label15;
         System::Windows::Forms::TextBox^ textBoxQuarticD;
 
-        PolynomialSolver::UI::GraphPanel^ graphPanel;
+        System::Windows::Forms::Button^ buttonCompare;
+        System::Windows::Forms::Button^ buttonGraph;
+        System::Windows::Forms::FlowLayoutPanel^ panelActions;
+        cli::array<double>^ graphCoefficients;
+        cli::array<double>^ graphRoots;
+        bool hasSearchSettings = false;
+        bool findAllRoots = false;
+        int calculationNumber = 0;
         System::Windows::Forms::Panel^ panelFifth;
         System::Windows::Forms::Label^ label22;
         System::Windows::Forms::TextBox^ textBoxFifthA;
@@ -108,7 +114,7 @@ namespace Project1
         System::Windows::Forms::Panel^ panelEquation;
         System::Windows::Forms::Panel^ panelEquationHost;
         System::Windows::Forms::TableLayoutPanel^ layoutResult;
-        System::Windows::Forms::Panel^ panelGraph;
+        System::Windows::Forms::Panel^ panelHistory;
         System::Windows::Forms::ComboBox^ comboBoxMethod;
 
         System::ComponentModel::Container^ components;
@@ -133,7 +139,7 @@ namespace Project1
             this->label6 = (gcnew System::Windows::Forms::Label());
             this->textBoxQuadraticB = (gcnew System::Windows::Forms::TextBox());
             this->buttonSolve = (gcnew System::Windows::Forms::Button());
-            this->labelResult = (gcnew System::Windows::Forms::Label());
+            this->richTextBoxHistory = (gcnew System::Windows::Forms::RichTextBox());
             this->panelCube = (gcnew System::Windows::Forms::Panel());
             this->label11 = (gcnew System::Windows::Forms::Label());
             this->textBoxCubeA = (gcnew System::Windows::Forms::TextBox());
@@ -178,7 +184,7 @@ namespace Project1
             this->layoutResult = (gcnew System::Windows::Forms::TableLayoutPanel());
             this->buttonHost = (gcnew System::Windows::Forms::Panel());
             this->buttonReset = (gcnew System::Windows::Forms::Button());
-            this->panelGraph = (gcnew System::Windows::Forms::Panel());
+            this->panelHistory = (gcnew System::Windows::Forms::Panel());
             this->panelLinear->SuspendLayout();
             this->panelQuadratic->SuspendLayout();
             this->panelCube->SuspendLayout();
@@ -192,9 +198,6 @@ namespace Project1
             this->layoutResult->SuspendLayout();
             this->buttonHost->SuspendLayout();
             this->SuspendLayout();
-            //
-            // label1
-            //
             this->label1->AutoSize = true;
             this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                               9.75F,
@@ -206,9 +209,6 @@ namespace Project1
             this->label1->Size = System::Drawing::Size(193, 16);
             this->label1->TabIndex = 0;
             this->label1->Text = L"Введите степень уравнения";
-            //
-            // comboBoxDegree
-            //
             this->comboBoxDegree->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
             this->comboBoxDegree->FormattingEnabled = true;
             this->comboBoxDegree->Items->AddRange(
@@ -219,9 +219,6 @@ namespace Project1
             this->comboBoxDegree->TabIndex = 1;
             this->comboBoxDegree->SelectedIndexChanged +=
                 gcnew System::EventHandler(this, &MyForm::comboBoxDegree_SelectedIndexChanged);
-            //
-            // label2
-            //
             this->label2->Dock = System::Windows::Forms::DockStyle::Top;
             this->label2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                               9.75F,
@@ -233,9 +230,6 @@ namespace Project1
             this->label2->Size = System::Drawing::Size(941, 22);
             this->label2->TabIndex = 2;
             this->label2->Text = L"Реши уравнение вида:";
-            //
-            // panelLinear
-            //
             this->panelLinear->Controls->Add(this->label4);
             this->panelLinear->Controls->Add(this->label3);
             this->panelLinear->Controls->Add(this->textBoxLinearB);
@@ -246,9 +240,6 @@ namespace Project1
             this->panelLinear->Size = System::Drawing::Size(941, 0);
             this->panelLinear->TabIndex = 3;
             this->panelLinear->Visible = false;
-            //
-            // label4
-            //
             this->label4->AutoSize = true;
             this->label4->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                               12,
@@ -260,9 +251,6 @@ namespace Project1
             this->label4->Size = System::Drawing::Size(35, 20);
             this->label4->TabIndex = 3;
             this->label4->Text = L"=  0";
-            //
-            // label3
-            //
             this->label3->AutoSize = true;
             this->label3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                               12,
@@ -274,23 +262,14 @@ namespace Project1
             this->label3->Size = System::Drawing::Size(29, 20);
             this->label3->TabIndex = 2;
             this->label3->Text = L"x +";
-            //
-            // textBoxLinearB
-            //
             this->textBoxLinearB->Location = System::Drawing::Point(77, 10);
             this->textBoxLinearB->Name = L"textBoxLinearB";
             this->textBoxLinearB->Size = System::Drawing::Size(33, 20);
             this->textBoxLinearB->TabIndex = 1;
-            //
-            // textBoxLinearA
-            //
             this->textBoxLinearA->Location = System::Drawing::Point(11, 10);
             this->textBoxLinearA->Name = L"textBoxLinearA";
             this->textBoxLinearA->Size = System::Drawing::Size(33, 20);
             this->textBoxLinearA->TabIndex = 0;
-            //
-            // panelQuadratic
-            //
             this->panelQuadratic->Controls->Add(this->label7);
             this->panelQuadratic->Controls->Add(this->textBoxQuadraticA);
             this->panelQuadratic->Controls->Add(this->label5);
@@ -303,9 +282,6 @@ namespace Project1
             this->panelQuadratic->Size = System::Drawing::Size(941, 0);
             this->panelQuadratic->TabIndex = 4;
             this->panelQuadratic->Visible = false;
-            //
-            // label7
-            //
             this->label7->AutoSize = true;
             this->label7->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                               12,
@@ -317,16 +293,10 @@ namespace Project1
             this->label7->Size = System::Drawing::Size(34, 20);
             this->label7->TabIndex = 9;
             this->label7->Text = L"x² +";
-            //
-            // textBoxQuadraticA
-            //
             this->textBoxQuadraticA->Location = System::Drawing::Point(11, 14);
             this->textBoxQuadraticA->Name = L"textBoxQuadraticA";
             this->textBoxQuadraticA->Size = System::Drawing::Size(33, 20);
             this->textBoxQuadraticA->TabIndex = 8;
-            //
-            // label5
-            //
             this->label5->AutoSize = true;
             this->label5->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                               12,
@@ -338,16 +308,10 @@ namespace Project1
             this->label5->Size = System::Drawing::Size(35, 20);
             this->label5->TabIndex = 7;
             this->label5->Text = L"=  0";
-            //
-            // textBoxQuadraticC
-            //
             this->textBoxQuadraticC->Location = System::Drawing::Point(170, 14);
             this->textBoxQuadraticC->Name = L"textBoxQuadraticC";
             this->textBoxQuadraticC->Size = System::Drawing::Size(39, 20);
             this->textBoxQuadraticC->TabIndex = 5;
-            //
-            // label6
-            //
             this->label6->AutoSize = true;
             this->label6->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                               12,
@@ -359,16 +323,10 @@ namespace Project1
             this->label6->Size = System::Drawing::Size(29, 20);
             this->label6->TabIndex = 6;
             this->label6->Text = L"x +";
-            //
-            // textBoxQuadraticB
-            //
             this->textBoxQuadraticB->Location = System::Drawing::Point(93, 14);
             this->textBoxQuadraticB->Name = L"textBoxQuadraticB";
             this->textBoxQuadraticB->Size = System::Drawing::Size(45, 20);
             this->textBoxQuadraticB->TabIndex = 4;
-            //
-            // buttonSolve
-            //
             this->buttonSolve->Dock = System::Windows::Forms::DockStyle::Fill;
             this->buttonSolve->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                                    11.25F,
@@ -382,26 +340,21 @@ namespace Project1
             this->buttonSolve->Text = L"Решить";
             this->buttonSolve->UseVisualStyleBackColor = true;
             this->buttonSolve->Click += gcnew System::EventHandler(this, &MyForm::buttonSolve_Click);
-            //
-            // labelResult
-            //
-            this->labelResult->AutoSize = true;
-            this->labelResult->Dock = System::Windows::Forms::DockStyle::Fill;
-            this->labelResult->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
+            this->richTextBoxHistory->ReadOnly = true;
+            this->richTextBoxHistory->BackColor = System::Drawing::Color::White;
+            this->richTextBoxHistory->DetectUrls = false;
+            this->richTextBoxHistory->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->richTextBoxHistory->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                                    10,
                                                                    System::Drawing::FontStyle::Regular,
                                                                    System::Drawing::GraphicsUnit::Point,
                                                                    static_cast<System::Byte>(204)));
-            this->labelResult->Location = System::Drawing::Point(118, 6);
-            this->labelResult->Margin = System::Windows::Forms::Padding(8, 6, 0, 8);
-            this->labelResult->MaximumSize = System::Drawing::Size(0, 220);
-            this->labelResult->Name = L"labelResult";
-            this->labelResult->Size = System::Drawing::Size(823, 28);
-            this->labelResult->TabIndex = 6;
-            this->labelResult->Text = L"Результат: ";
-            //
-            // panelCube
-            //
+            this->richTextBoxHistory->Location = System::Drawing::Point(118, 6);
+            this->richTextBoxHistory->Margin = System::Windows::Forms::Padding(8, 6, 0, 8);
+            this->richTextBoxHistory->Name = L"richTextBoxHistory";
+            this->richTextBoxHistory->Size = System::Drawing::Size(823, 28);
+            this->richTextBoxHistory->TabIndex = 6;
+            this->richTextBoxHistory->Text = L"";
             this->panelCube->Controls->Add(this->label11);
             this->panelCube->Controls->Add(this->textBoxCubeA);
             this->panelCube->Controls->Add(this->label8);
@@ -416,9 +369,6 @@ namespace Project1
             this->panelCube->Size = System::Drawing::Size(941, 0);
             this->panelCube->TabIndex = 10;
             this->panelCube->Visible = false;
-            //
-            // label11
-            //
             this->label11->AutoSize = true;
             this->label11->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                                12,
@@ -430,16 +380,10 @@ namespace Project1
             this->label11->Size = System::Drawing::Size(34, 20);
             this->label11->TabIndex = 11;
             this->label11->Text = L"x³ +";
-            //
-            // textBoxCubeA
-            //
             this->textBoxCubeA->Location = System::Drawing::Point(5, 14);
             this->textBoxCubeA->Name = L"textBoxCubeA";
             this->textBoxCubeA->Size = System::Drawing::Size(33, 20);
             this->textBoxCubeA->TabIndex = 10;
-            //
-            // label8
-            //
             this->label8->AutoSize = true;
             this->label8->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                               12,
@@ -451,16 +395,10 @@ namespace Project1
             this->label8->Size = System::Drawing::Size(34, 20);
             this->label8->TabIndex = 9;
             this->label8->Text = L"x² +";
-            //
-            // textBoxCubeB
-            //
             this->textBoxCubeB->Location = System::Drawing::Point(92, 14);
             this->textBoxCubeB->Name = L"textBoxCubeB";
             this->textBoxCubeB->Size = System::Drawing::Size(33, 20);
             this->textBoxCubeB->TabIndex = 8;
-            //
-            // label9
-            //
             this->label9->AutoSize = true;
             this->label9->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                               12,
@@ -472,16 +410,10 @@ namespace Project1
             this->label9->Size = System::Drawing::Size(35, 20);
             this->label9->TabIndex = 7;
             this->label9->Text = L"=  0";
-            //
-            // textBoxCubeD
-            //
             this->textBoxCubeD->Location = System::Drawing::Point(251, 14);
             this->textBoxCubeD->Name = L"textBoxCubeD";
             this->textBoxCubeD->Size = System::Drawing::Size(39, 20);
             this->textBoxCubeD->TabIndex = 5;
-            //
-            // label10
-            //
             this->label10->AutoSize = true;
             this->label10->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                                12,
@@ -493,16 +425,10 @@ namespace Project1
             this->label10->Size = System::Drawing::Size(29, 20);
             this->label10->TabIndex = 6;
             this->label10->Text = L"x +";
-            //
-            // textBoxCubeC
-            //
             this->textBoxCubeC->Location = System::Drawing::Point(174, 14);
             this->textBoxCubeC->Name = L"textBoxCubeC";
             this->textBoxCubeC->Size = System::Drawing::Size(45, 20);
             this->textBoxCubeC->TabIndex = 4;
-            //
-            // panelQuartic
-            //
             this->panelQuartic->Controls->Add(this->label16);
             this->panelQuartic->Controls->Add(this->label12);
             this->panelQuartic->Controls->Add(this->textBoxQuarticA);
@@ -519,9 +445,6 @@ namespace Project1
             this->panelQuartic->Size = System::Drawing::Size(941, 0);
             this->panelQuartic->TabIndex = 12;
             this->panelQuartic->Visible = false;
-            //
-            // label16
-            //
             this->label16->AutoSize = true;
             this->label16->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                                12,
@@ -533,9 +456,6 @@ namespace Project1
             this->label16->Size = System::Drawing::Size(34, 20);
             this->label16->TabIndex = 13;
             this->label16->Text = L"x⁴ +";
-            //
-            // label12
-            //
             this->label12->AutoSize = true;
             this->label12->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                                12,
@@ -547,23 +467,14 @@ namespace Project1
             this->label12->Size = System::Drawing::Size(34, 20);
             this->label12->TabIndex = 11;
             this->label12->Text = L"x³ +";
-            //
-            // textBoxQuarticA
-            //
             this->textBoxQuarticA->Location = System::Drawing::Point(5, 14);
             this->textBoxQuarticA->Name = L"textBoxQuarticA";
             this->textBoxQuarticA->Size = System::Drawing::Size(33, 20);
             this->textBoxQuarticA->TabIndex = 12;
-            //
-            // textBoxQuarticB
-            //
             this->textBoxQuarticB->Location = System::Drawing::Point(93, 14);
             this->textBoxQuarticB->Name = L"textBoxQuarticB";
             this->textBoxQuarticB->Size = System::Drawing::Size(33, 20);
             this->textBoxQuarticB->TabIndex = 10;
-            //
-            // label13
-            //
             this->label13->AutoSize = true;
             this->label13->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                                12,
@@ -575,16 +486,10 @@ namespace Project1
             this->label13->Size = System::Drawing::Size(34, 20);
             this->label13->TabIndex = 9;
             this->label13->Text = L"x² +";
-            //
-            // textBoxQuarticC
-            //
             this->textBoxQuarticC->Location = System::Drawing::Point(180, 14);
             this->textBoxQuarticC->Name = L"textBoxQuarticC";
             this->textBoxQuarticC->Size = System::Drawing::Size(33, 20);
             this->textBoxQuarticC->TabIndex = 8;
-            //
-            // label14
-            //
             this->label14->AutoSize = true;
             this->label14->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                                12,
@@ -596,16 +501,10 @@ namespace Project1
             this->label14->Size = System::Drawing::Size(35, 20);
             this->label14->TabIndex = 7;
             this->label14->Text = L"=  0";
-            //
-            // textBoxQuarticE
-            //
             this->textBoxQuarticE->Location = System::Drawing::Point(339, 14);
             this->textBoxQuarticE->Name = L"textBoxQuarticE";
             this->textBoxQuarticE->Size = System::Drawing::Size(39, 20);
             this->textBoxQuarticE->TabIndex = 5;
-            //
-            // label15
-            //
             this->label15->AutoSize = true;
             this->label15->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                                12,
@@ -617,16 +516,10 @@ namespace Project1
             this->label15->Size = System::Drawing::Size(29, 20);
             this->label15->TabIndex = 6;
             this->label15->Text = L"x +";
-            //
-            // textBoxQuarticD
-            //
             this->textBoxQuarticD->Location = System::Drawing::Point(262, 14);
             this->textBoxQuarticD->Name = L"textBoxQuarticD";
             this->textBoxQuarticD->Size = System::Drawing::Size(45, 20);
             this->textBoxQuarticD->TabIndex = 4;
-            //
-            // panelFifth
-            //
             this->panelFifth->Controls->Add(this->label22);
             this->panelFifth->Controls->Add(this->textBoxFifthA);
             this->panelFifth->Controls->Add(this->label17);
@@ -645,9 +538,6 @@ namespace Project1
             this->panelFifth->Size = System::Drawing::Size(941, 0);
             this->panelFifth->TabIndex = 14;
             this->panelFifth->Visible = false;
-            //
-            // label22
-            //
             this->label22->AutoSize = true;
             this->label22->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                                12,
@@ -659,16 +549,10 @@ namespace Project1
             this->label22->Size = System::Drawing::Size(34, 20);
             this->label22->TabIndex = 15;
             this->label22->Text = L"x⁵ +";
-            //
-            // textBoxFifthA
-            //
             this->textBoxFifthA->Location = System::Drawing::Point(7, 14);
             this->textBoxFifthA->Name = L"textBoxFifthA";
             this->textBoxFifthA->Size = System::Drawing::Size(33, 20);
             this->textBoxFifthA->TabIndex = 14;
-            //
-            // label17
-            //
             this->label17->AutoSize = true;
             this->label17->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                                12,
@@ -680,9 +564,6 @@ namespace Project1
             this->label17->Size = System::Drawing::Size(34, 20);
             this->label17->TabIndex = 13;
             this->label17->Text = L"x⁴ +";
-            //
-            // label18
-            //
             this->label18->AutoSize = true;
             this->label18->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                                12,
@@ -694,23 +575,14 @@ namespace Project1
             this->label18->Size = System::Drawing::Size(34, 20);
             this->label18->TabIndex = 11;
             this->label18->Text = L"x³ +";
-            //
-            // textBoxFifthB
-            //
             this->textBoxFifthB->Location = System::Drawing::Point(90, 14);
             this->textBoxFifthB->Name = L"textBoxFifthB";
             this->textBoxFifthB->Size = System::Drawing::Size(33, 20);
             this->textBoxFifthB->TabIndex = 12;
-            //
-            // textBoxFifthC
-            //
             this->textBoxFifthC->Location = System::Drawing::Point(178, 14);
             this->textBoxFifthC->Name = L"textBoxFifthC";
             this->textBoxFifthC->Size = System::Drawing::Size(33, 20);
             this->textBoxFifthC->TabIndex = 10;
-            //
-            // label19
-            //
             this->label19->AutoSize = true;
             this->label19->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                                12,
@@ -722,16 +594,10 @@ namespace Project1
             this->label19->Size = System::Drawing::Size(34, 20);
             this->label19->TabIndex = 9;
             this->label19->Text = L"x² +";
-            //
-            // textBoxFifthD
-            //
             this->textBoxFifthD->Location = System::Drawing::Point(265, 14);
             this->textBoxFifthD->Name = L"textBoxFifthD";
             this->textBoxFifthD->Size = System::Drawing::Size(33, 20);
             this->textBoxFifthD->TabIndex = 8;
-            //
-            // label20
-            //
             this->label20->AutoSize = true;
             this->label20->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                                12,
@@ -743,16 +609,10 @@ namespace Project1
             this->label20->Size = System::Drawing::Size(35, 20);
             this->label20->TabIndex = 7;
             this->label20->Text = L"=  0";
-            //
-            // textBoxFifthF
-            //
             this->textBoxFifthF->Location = System::Drawing::Point(424, 14);
             this->textBoxFifthF->Name = L"textBoxFifthF";
             this->textBoxFifthF->Size = System::Drawing::Size(39, 20);
             this->textBoxFifthF->TabIndex = 5;
-            //
-            // label21
-            //
             this->label21->AutoSize = true;
             this->label21->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
                                                                12,
@@ -764,23 +624,17 @@ namespace Project1
             this->label21->Size = System::Drawing::Size(29, 20);
             this->label21->TabIndex = 6;
             this->label21->Text = L"x +";
-            //
-            // textBoxFifthE
-            //
             this->textBoxFifthE->Location = System::Drawing::Point(347, 14);
             this->textBoxFifthE->Name = L"textBoxFifthE";
             this->textBoxFifthE->Size = System::Drawing::Size(45, 20);
             this->textBoxFifthE->TabIndex = 4;
-            //
-            // tableLayoutPanel1
-            //
             this->tableLayoutPanel1->ColumnCount = 1;
             this->tableLayoutPanel1->ColumnStyles->Add(
                 (gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 100)));
             this->tableLayoutPanel1->Controls->Add(this->panelSelection, 0, 0);
             this->tableLayoutPanel1->Controls->Add(this->panelEquation, 0, 1);
             this->tableLayoutPanel1->Controls->Add(this->layoutResult, 0, 2);
-            this->tableLayoutPanel1->Controls->Add(this->panelGraph, 0, 3);
+            this->tableLayoutPanel1->Controls->Add(this->panelHistory, 0, 3);
             this->tableLayoutPanel1->Dock = System::Windows::Forms::DockStyle::Fill;
             this->tableLayoutPanel1->GrowStyle = System::Windows::Forms::TableLayoutPanelGrowStyle::FixedSize;
             this->tableLayoutPanel1->Location = System::Drawing::Point(0, 0);
@@ -796,9 +650,6 @@ namespace Project1
                 (gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 100)));
             this->tableLayoutPanel1->Size = System::Drawing::Size(979, 561);
             this->tableLayoutPanel1->TabIndex = 0;
-            //
-            // panelSelection
-            //
             this->panelSelection->Controls->Add(this->comboBoxMethod);
             this->panelSelection->Controls->Add(this->label1);
             this->panelSelection->Controls->Add(this->comboBoxDegree);
@@ -808,9 +659,6 @@ namespace Project1
             this->panelSelection->Name = L"panelSelection";
             this->panelSelection->Size = System::Drawing::Size(941, 42);
             this->panelSelection->TabIndex = 0;
-            //
-            // comboBoxMethod
-            //
             this->comboBoxMethod->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
             this->comboBoxMethod->FormattingEnabled = true;
             this->comboBoxMethod->Items->AddRange(
@@ -822,18 +670,12 @@ namespace Project1
             this->comboBoxMethod->Visible = false;
             this->comboBoxMethod->SelectedIndexChanged +=
                 gcnew System::EventHandler(this, &MyForm::comboBoxMethod_SelectedIndexChanged);
-            //
-            // methodLabel
-            //
             this->methodLabel->AutoSize = true;
             this->methodLabel->Location = System::Drawing::Point(375, 14);
             this->methodLabel->Name = L"methodLabel";
             this->methodLabel->Size = System::Drawing::Size(42, 13);
             this->methodLabel->TabIndex = 5;
             this->methodLabel->Text = L"Метод:";
-            //
-            // panelEquation
-            //
             this->panelEquation->Controls->Add(this->panelEquationHost);
             this->panelEquation->Controls->Add(this->label2);
             this->panelEquation->Controls->Add(this->panelInterval);
@@ -842,9 +684,6 @@ namespace Project1
             this->panelEquation->Name = L"panelEquation";
             this->panelEquation->Size = System::Drawing::Size(941, 70);
             this->panelEquation->TabIndex = 1;
-            //
-            // panelEquationHost
-            //
             this->panelEquationHost->Controls->Add(this->panelLinear);
             this->panelEquationHost->Controls->Add(this->panelQuadratic);
             this->panelEquationHost->Controls->Add(this->panelCube);
@@ -855,18 +694,12 @@ namespace Project1
             this->panelEquationHost->Name = L"panelEquationHost";
             this->panelEquationHost->Size = System::Drawing::Size(941, 0);
             this->panelEquationHost->TabIndex = 0;
-            //
-            // panelInterval
-            //
             this->panelInterval->Controls->Add(this->buttonSearchSettings);
             this->panelInterval->Dock = System::Windows::Forms::DockStyle::Bottom;
             this->panelInterval->Location = System::Drawing::Point(0, 14);
             this->panelInterval->Name = L"panelInterval";
             this->panelInterval->Size = System::Drawing::Size(941, 56);
             this->panelInterval->TabIndex = 3;
-            //
-            // buttonSearchSettings
-            //
             this->buttonSearchSettings->Location = System::Drawing::Point(3, 10);
             this->buttonSearchSettings->Name = L"buttonSearchSettings";
             this->buttonSearchSettings->Size = System::Drawing::Size(160, 30);
@@ -874,9 +707,6 @@ namespace Project1
             this->buttonSearchSettings->Text = L"Настройки поиска";
             this->buttonSearchSettings->Click +=
                 gcnew System::EventHandler(this, &MyForm::buttonSearchSettings_Click);
-            //
-            // layoutResult
-            //
             this->layoutResult->AutoSize = true;
             this->layoutResult->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
             this->layoutResult->ColumnCount = 2;
@@ -885,7 +715,7 @@ namespace Project1
             this->layoutResult->ColumnStyles->Add(
                 (gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 100)));
             this->layoutResult->Controls->Add(this->buttonHost, 0, 0);
-            this->layoutResult->Controls->Add(this->labelResult, 1, 0);
+
             this->layoutResult->Dock = System::Windows::Forms::DockStyle::Top;
             this->layoutResult->Location = System::Drawing::Point(19, 143);
             this->layoutResult->Name = L"layoutResult";
@@ -893,18 +723,12 @@ namespace Project1
             this->layoutResult->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
             this->layoutResult->Size = System::Drawing::Size(941, 42);
             this->layoutResult->TabIndex = 2;
-            //
-            // buttonHost
-            //
             this->buttonHost->Controls->Add(this->buttonSolve);
             this->buttonHost->Controls->Add(this->buttonReset);
             this->buttonHost->Location = System::Drawing::Point(3, 3);
             this->buttonHost->Name = L"buttonHost";
             this->buttonHost->Size = System::Drawing::Size(94, 36);
             this->buttonHost->TabIndex = 0;
-            //
-            // buttonReset
-            //
             this->buttonReset->Dock = System::Windows::Forms::DockStyle::Fill;
             this->buttonReset->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 11.25F));
             this->buttonReset->Location = System::Drawing::Point(0, 0);
@@ -913,18 +737,12 @@ namespace Project1
             this->buttonReset->TabIndex = 6;
             this->buttonReset->Text = L"Сбросить";
             this->buttonReset->Click += gcnew System::EventHandler(this, &MyForm::buttonReset_Click);
-            //
-            // panelGraph
-            //
-            this->panelGraph->Dock = System::Windows::Forms::DockStyle::Fill;
-            this->panelGraph->Location = System::Drawing::Point(19, 191);
-            this->panelGraph->MinimumSize = System::Drawing::Size(0, 180);
-            this->panelGraph->Name = L"panelGraph";
-            this->panelGraph->Size = System::Drawing::Size(941, 351);
-            this->panelGraph->TabIndex = 3;
-            //
-            // MyForm
-            //
+            this->panelHistory->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->panelHistory->Location = System::Drawing::Point(19, 191);
+            this->panelHistory->MinimumSize = System::Drawing::Size(0, 180);
+            this->panelHistory->Name = L"panelHistory";
+            this->panelHistory->Size = System::Drawing::Size(941, 351);
+            this->panelHistory->TabIndex = 3;
             this->AcceptButton = this->buttonSolve;
             this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
             this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
@@ -958,16 +776,30 @@ namespace Project1
 
 #pragma endregion
     private:
-        void InitializeGraphPanel()
-        {
-            graphPanel = gcnew PolynomialSolver::UI::GraphPanel();
-            graphPanel->Dock = DockStyle::Fill;
-            graphPanel->BorderStyle = BorderStyle::FixedSingle;
-            panelGraph->Controls->Add(graphPanel);
-        }
-
         void InitializeSolutionControls()
         {
+            panelHistory->Controls->Add(richTextBoxHistory);
+            richTextBoxHistory->Dock = DockStyle::Fill;
+            richTextBoxHistory->Font = gcnew Drawing::Font(L"Consolas", 10);
+            panelActions = gcnew FlowLayoutPanel();
+            panelActions->Dock = DockStyle::Fill;
+            panelActions->WrapContents = false;
+            tableLayoutPanel1->RowStyles[2]->SizeType = SizeType::Absolute;
+            tableLayoutPanel1->RowStyles[2]->Height = 44;
+            layoutResult->Controls->Add(panelActions, 1, 0);
+            buttonCompare = gcnew Button();
+            buttonCompare->Name = L"buttonCompare";
+            buttonCompare->Text = L"Сравнить методы";
+            buttonCompare->Size = Drawing::Size(160, 30);
+            buttonCompare->Click += gcnew EventHandler(this, &MyForm::buttonCompare_Click);
+            panelActions->Controls->Add(buttonCompare);
+            buttonGraph = gcnew Button();
+            buttonGraph->Name = L"buttonGraph";
+            buttonGraph->Text = L"Построить график";
+            buttonGraph->Size = Drawing::Size(160, 30);
+            buttonGraph->Enabled = false;
+            buttonGraph->Click += gcnew EventHandler(this, &MyForm::buttonGraph_Click);
+            panelActions->Controls->Add(buttonGraph);
             comboBoxMethod->SelectedIndex = 0;
             comboBoxDegree->SelectedIndex = 0;
             SetSolutionLocked(false);
@@ -979,12 +811,17 @@ namespace Project1
             SearchSettingsForm^ dialog = gcnew SearchSettingsForm();
             try
             {
-                dialog->SetValues(searchLeft, searchRight, searchAccuracy);
+                if (hasSearchSettings)
+                {
+                    dialog->SetValues(searchLeft, searchRight, searchAccuracy, findAllRoots);
+                }
                 if (dialog->ShowDialog(this) == System::Windows::Forms::DialogResult::OK)
                 {
                     searchLeft = dialog->LeftBoundary;
                     searchRight = dialog->RightBoundary;
                     searchAccuracy = dialog->Accuracy;
+                    findAllRoots = dialog->FindAll;
+                    hasSearchSettings = true;
                 }
             }
             finally
@@ -1014,29 +851,46 @@ namespace Project1
             {
                 methodLabel->Visible = selectMethod;
             }
-            bool numerical = IsNumericalMethod();
-            if (panelInterval != nullptr)
-            {
-                panelInterval->Visible = numerical;
-            }
-            if (numerical)
-            {
-                tableLayoutPanel1->RowStyles[1]->Height = 132.0F;
-            }
-            else
-            {
-                tableLayoutPanel1->RowStyles[1]->Height = 76.0F;
-            }
-            ClearResult();
+            buttonCompare->Visible = index < 4;
+            panelInterval->Visible = true;
+            tableLayoutPanel1->RowStyles[1]->Height = 132.0F;
+            ClearGraphData();
         }
 
-        void ClearResult()
+        void ClearGraphData()
         {
-            labelResult->Text = L"Результат:";
-            if (graphPanel != nullptr)
+            graphCoefficients = nullptr;
+            graphRoots = nullptr;
+            buttonGraph->Enabled = false;
+        }
+
+        void AppendResult(String^ text)
+        {
+            richTextBoxHistory->SelectAll();
+            richTextBoxHistory->SelectionColor = Color::DimGray;
+            richTextBoxHistory->SelectionBackColor = Color::White;
+            richTextBoxHistory->SelectionStart = richTextBoxHistory->TextLength;
+            richTextBoxHistory->SelectionLength = 0;
+            richTextBoxHistory->SelectionColor = Color::Black;
+            richTextBoxHistory->SelectionBackColor = Color::LightYellow;
+            richTextBoxHistory->AppendText(text + Environment::NewLine + Environment::NewLine);
+            richTextBoxHistory->SelectionStart = richTextBoxHistory->TextLength;
+            richTextBoxHistory->ScrollToCaret();
+        }
+
+        SearchSettings ReadSearchSettings()
+        {
+            if (!hasSearchSettings)
             {
-                graphPanel->ClearGraph();
+                throw gcnew ArgumentException(L"Откройте настройки поиска и введите обе границы интервала.");
             }
+            SearchSettings settings;
+            settings.left = searchLeft;
+            settings.right = searchRight;
+            settings.accuracy = searchAccuracy;
+            settings.findAll = findAllRoots;
+            settings.Validate();
+            return settings;
         }
 
         void SetSolutionLocked(bool locked)
@@ -1049,6 +903,7 @@ namespace Project1
             comboBoxDegree->Enabled = !locked;
             comboBoxMethod->Enabled = !locked;
             buttonSearchSettings->Enabled = !locked;
+            buttonCompare->Enabled = !locked;
             buttonSolve->Visible = !locked;
             buttonReset->Visible = locked;
             if (locked)
@@ -1134,16 +989,16 @@ namespace Project1
         {
             if (IsNumericalMethod())
             {
-                SearchSettings settings;
-                settings.left = searchLeft;
-                settings.right = searchRight;
-                settings.step = SearchSettings::SearchStep;
-                settings.accuracy = searchAccuracy;
-
+                SearchSettings settings = ReadSearchSettings();
                 BisectionSolver solver(settings);
                 return solver.Solve(polynomial);
             }
 
+            return SolveAnalytical(polynomial);
+        }
+
+        Solution SolveAnalytical(const Polynomial& polynomial)
+        {
             switch (polynomial.Degree())
             {
             case 1:
@@ -1173,9 +1028,9 @@ namespace Project1
             }
         }
 
-        void ShowSolution(const Polynomial& polynomial, const Solution& solution)
+        void PrepareGraph(const Polynomial& polynomial, const Solution& solution)
         {
-            labelResult->Text = PolynomialSolver::UI::ResultFormatter::Format(solution, IsNumericalMethod());
+
             const vector<double>& values = polynomial.Coefficients();
             cli::array<double>^ coefficients = gcnew cli::array<double>(static_cast<int>(values.size()));
             for (int i = 0; i < coefficients->Length; ++i)
@@ -1192,7 +1047,9 @@ namespace Project1
                     real->Add(root.real());
                 }
             }
-            graphPanel->SetPolynomial(coefficients, real->ToArray());
+            graphCoefficients = coefficients;
+            graphRoots = real->ToArray();
+            buttonGraph->Enabled = true;
         }
 
         System::Void comboBoxDegree_SelectedIndexChanged(System::Object^, System::EventArgs^)
@@ -1207,9 +1064,104 @@ namespace Project1
 
         System::Void buttonReset_Click(System::Object^, System::EventArgs^)
         {
-            ClearResult();
+            ClearGraphData();
             SetSolutionLocked(false);
             CoefficientFields()[0]->Focus();
+        }
+
+        String^ CalculationTitle(const Polynomial& polynomial)
+        {
+            ++calculationNumber;
+            String^ text = String::Format(L"Расчёт №{0}: ", calculationNumber);
+            cli::array<String^>^ powers = gcnew cli::array<String^>{L"", L"x", L"x²", L"x³", L"x⁴", L"x⁵"};
+            const vector<double>& coefficients = polynomial.Coefficients();
+            for (int i = 0; i < static_cast<int>(coefficients.size()); ++i)
+            {
+                if (i > 0)
+                {
+                    text += L" + ";
+                }
+                text += String::Format(L"({0:G12}){1}", coefficients[i], powers[polynomial.Degree() - i]);
+            }
+            return text + L" = 0" + Environment::NewLine;
+        }
+
+        String^ NumericalTitle()
+        {
+            String^ mode = L"один корень";
+            if (findAllRoots)
+            {
+                mode = L"все обнаруженные действительные корни";
+            }
+            String^ accuracyText = searchAccuracy.ToString(L"0.############");
+            return String::Format(
+                L"Численный метод: {0}; интервал [{1:G12}; {2:G12}], погрешность {3}",
+                mode, searchLeft, searchRight, accuracyText) + Environment::NewLine;
+        }
+
+        System::Void buttonGraph_Click(System::Object^, System::EventArgs^)
+        {
+            if (graphCoefficients == nullptr)
+            {
+                return;
+            }
+            GraphForm^ window = gcnew GraphForm(graphCoefficients, graphRoots);
+            window->Show(this);
+        }
+
+        System::Void buttonCompare_Click(System::Object^, System::EventArgs^)
+        {
+            try
+            {
+                Polynomial polynomial = ReadPolynomial();
+                SearchSettings settings = ReadSearchSettings();
+                String^ text = CalculationTitle(polynomial);
+                text += L"Сравнение методов" + Environment::NewLine;
+                Solution analytical;
+                bool analyticalReady = false;
+                try
+                {
+                    analytical = SolveAnalytical(polynomial);
+                    VerifySolution(polynomial, analytical);
+                    if (!analytical.verified)
+                    {
+                        throw gcnew InvalidOperationException(L"Проверка аналитических корней подстановкой не пройдена.");
+                    }
+                    text += L"Аналитический метод: все корни уравнения" + Environment::NewLine;
+                    text += PolynomialSolver::UI::ResultFormatter::Format(analytical, false);
+                    analyticalReady = true;
+                }
+                catch (System::Exception^ error)
+                {
+                    text += L"Аналитический метод: " + error->Message;
+                }
+                text += Environment::NewLine + NumericalTitle();
+                try
+                {
+                    BisectionSolver solver(settings);
+                    Solution numerical = solver.Solve(polynomial);
+                    VerifySolution(polynomial, numerical);
+                    text += PolynomialSolver::UI::ResultFormatter::Format(numerical, true);
+                    if (!analyticalReady)
+                    {
+                        PrepareGraph(polynomial, numerical);
+                    }
+                }
+                catch (System::Exception^ error)
+                {
+                    text += error->Message;
+                }
+                if (analyticalReady)
+                {
+                    PrepareGraph(polynomial, analytical);
+                }
+                AppendResult(text);
+                SetSolutionLocked(true);
+            }
+            catch (System::Exception^ error)
+            {
+                AppendResult(L"Ошибка: " + error->Message);
+            }
         }
 
         System::Void buttonSolve_Click(System::Object^, System::EventArgs^)
@@ -1219,20 +1171,28 @@ namespace Project1
                 Polynomial polynomial = ReadPolynomial();
                 Solution solution = ComputeSolution(polynomial);
                 VerifySolution(polynomial, solution);
-
                 if (!IsNumericalMethod() && !solution.verified)
                 {
                     throw gcnew System::InvalidOperationException(
                         L"Проверка подстановкой не пройдена. Формулы потеряли точность.");
                 }
-
-                ShowSolution(polynomial, solution);
+                String^ text = CalculationTitle(polynomial);
+                if (IsNumericalMethod())
+                {
+                    text += NumericalTitle();
+                }
+                else
+                {
+                    text += L"Аналитический метод: все корни уравнения" + Environment::NewLine;
+                }
+                text += PolynomialSolver::UI::ResultFormatter::Format(solution, IsNumericalMethod());
+                AppendResult(text);
+                PrepareGraph(polynomial, solution);
                 SetSolutionLocked(true);
             }
             catch (System::Exception^ error)
             {
-                ClearResult();
-                labelResult->Text = error->Message;
+                AppendResult(L"Ошибка: " + error->Message);
             }
         }
     };

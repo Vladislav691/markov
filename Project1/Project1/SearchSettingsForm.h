@@ -15,10 +15,18 @@ namespace Project1
         SearchSettingsForm(void)
         {
             InitializeComponent();
-            SetValues(-10, 10, 1e-6);
+            textBoxAccuracy->Text = L"0,000001";
         }
 
-        void SetValues(double left, double right, double accuracy);
+        void SetValues(double left, double right, double accuracy, bool findAll);
+        property bool FindAll
+        {
+            bool get()
+            {
+                return checkBoxFindAll->Checked;
+            }
+        }
+
 
         property double LeftBoundary
         {
@@ -45,6 +53,7 @@ namespace Project1
         }
 
     private:
+        System::Windows::Forms::CheckBox^ checkBoxFindAll;
         double leftBoundary;
         double rightBoundary;
         double accuracyValue;
@@ -89,6 +98,18 @@ namespace Project1
             this->label3 = (gcnew System::Windows::Forms::Label());
             this->buttonApply = (gcnew System::Windows::Forms::Button());
             this->buttonCancel = (gcnew System::Windows::Forms::Button());
+            this->checkBoxFindAll = gcnew System::Windows::Forms::CheckBox();
+            this->checkBoxFindAll->Name = L"checkBoxFindAll";
+            this->checkBoxFindAll->Text = L"Найти все действительные корни";
+            this->checkBoxFindAll->AutoSize = true;
+            this->checkBoxFindAll->Location = System::Drawing::Point(12, 143);
+            this->checkBoxFindAll->TabIndex = 6;
+            System::Windows::Forms::Label^ hint = gcnew System::Windows::Forms::Label();
+            hint->Text = L"Бисекция может пропустить кратные и близкие корни.";
+            hint->Location = System::Drawing::Point(12, 168);
+            hint->Size = System::Drawing::Size(360, 30);
+            this->Controls->Add(hint);
+            this->Controls->Add(this->checkBoxFindAll);
             this->SuspendLayout();
             this->label1->AutoSize = true;
             this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif",
@@ -136,24 +157,24 @@ namespace Project1
             this->label3->TabIndex = 4;
             this->label3->Text = L"Точность:";
             this->buttonApply->BackColor = System::Drawing::Color::DarkCyan;
-            this->buttonApply->Location = System::Drawing::Point(122, 156);
+            this->buttonApply->Location = System::Drawing::Point(122, 192);
             this->buttonApply->Name = L"buttonApply";
             this->buttonApply->Size = System::Drawing::Size(118, 29);
-            this->buttonApply->TabIndex = 6;
+            this->buttonApply->TabIndex = 7;
             this->buttonApply->Text = L"Применить";
             this->buttonApply->UseVisualStyleBackColor = false;
             this->buttonApply->Click +=
                 gcnew System::EventHandler(this, &SearchSettingsForm::buttonApply_Click);
-            this->buttonCancel->Location = System::Drawing::Point(246, 156);
+            this->buttonCancel->Location = System::Drawing::Point(246, 192);
             this->buttonCancel->Name = L"buttonCancel";
             this->buttonCancel->Size = System::Drawing::Size(118, 29);
-            this->buttonCancel->TabIndex = 7;
+            this->buttonCancel->TabIndex = 8;
             this->buttonCancel->Text = L"Отмена";
             this->buttonCancel->DialogResult = System::Windows::Forms::DialogResult::Cancel;
             this->buttonCancel->UseVisualStyleBackColor = true;
             this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
             this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-            this->ClientSize = System::Drawing::Size(385, 195);
+            this->ClientSize = System::Drawing::Size(385, 232);
             this->Controls->Add(this->buttonCancel);
             this->Controls->Add(this->buttonApply);
             this->Controls->Add(this->textBoxAccuracy);

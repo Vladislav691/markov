@@ -7,11 +7,12 @@ namespace Project1
     using namespace System::Globalization;
     using namespace System::Windows::Forms;
 
-    void SearchSettingsForm::SetValues(double left, double right, double accuracy)
+    void SearchSettingsForm::SetValues(double left, double right, double accuracy, bool findAll)
     {
         leftBoundary = left;
         rightBoundary = right;
         accuracyValue = accuracy;
+        checkBoxFindAll->Checked = findAll;
         textBoxLeft->Text = left.ToString(L"G", CultureInfo::CurrentCulture);
         textBoxRight->Text = right.ToString(L"G", CultureInfo::CurrentCulture);
         textBoxAccuracy->Text = accuracy.ToString(L"0.############", CultureInfo::CurrentCulture);
@@ -36,6 +37,7 @@ namespace Project1
             settings.left = ReadNumber(textBoxLeft, L"Левая граница");
             settings.right = ReadNumber(textBoxRight, L"Правая граница");
             settings.accuracy = ReadNumber(textBoxAccuracy, L"Точность");
+            settings.findAll = checkBoxFindAll->Checked;
             settings.Validate();
             const double minimumAccuracy = 0.000000000001;
             if (settings.accuracy < minimumAccuracy)

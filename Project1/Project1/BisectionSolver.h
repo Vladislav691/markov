@@ -22,6 +22,10 @@ namespace PolynomialSolver
                 throw gcnew System::ArgumentException(
                     L"Численный поиск требует ненулевой старший коэффициент.");
             }
+            if (!settings_.findAll)
+            {
+                return SolveOne(polynomial);
+            }
             Solution result;
             double left = settings_.left;
             double leftValue = CheckedValue(polynomial, left);
@@ -72,6 +76,30 @@ namespace PolynomialSolver
     private:
         SearchSettings settings_;
 
+        Solution SolveOne(const Polynomial& polynomial) const
+        {
+            double leftValue = CheckedValue(polynomial, settings_.left);
+            double rightValue = CheckedValue(polynomial, settings_.right);
+            Solution result;
+            if (leftValue == 0)
+            {
+                AddRoot(result, settings_.left);
+            }
+            else if (rightValue == 0)
+            {
+                AddRoot(result, settings_.right);
+            }
+            else if (OppositeSigns(leftValue, rightValue))
+            {
+                AddRoot(result, Refine(polynomial, settings_.left, settings_.right));
+            }
+            else
+            {
+                throw gcnew System::ArgumentException(
+                    L"На границах нет смены знака. Укажите другой интервал или включите поиск всех корней.");
+            }
+            return result;
+        }
         double Refine(const Polynomial& polynomial, double left, double right) const
         {
             double leftValue = CheckedValue(polynomial, left);

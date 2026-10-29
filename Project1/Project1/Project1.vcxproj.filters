@@ -53,6 +53,9 @@
     </EmbeddedResource>
     <ClInclude Include="SearchSettingsForm.h" />
     <ClInclude Include="SearchSettings.h" />
+    <ClInclude Include="GraphForm.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SearchSettingsForm.cpp" />

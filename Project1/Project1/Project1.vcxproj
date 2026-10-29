@@ -158,6 +158,7 @@
     <ClInclude Include="BisectionSolver.h" />
     <ClInclude Include="ResultFormatter.h" />
     <ClInclude Include="GraphPanel.h" />
+    <ClInclude Include="GraphForm.h" />
     <ClInclude Include="LinearEquation.h" />
     <ClInclude Include="MyForm.h">
       <FileType>CppForm</FileType>

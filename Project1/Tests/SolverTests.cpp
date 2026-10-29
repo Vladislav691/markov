@@ -95,6 +95,7 @@ namespace
         settings.left = left;
         settings.right = right;
         settings.step = step;
+        settings.findAll = true;
         settings.accuracy = accuracy;
         return settings;
     }
@@ -151,6 +152,7 @@ namespace
         String^ initialLeft;
         String^ initialAccuracy;
         bool cancel;
+        bool findAll = true;
 
         SettingsDialogAction(String^ leftValue, String^ rightValue, String^ accuracyValue, bool cancelValue)
         {
@@ -175,7 +177,14 @@ namespace
             initialAccuracy = Field(dialog, L"textBoxAccuracy")->Text;
             Field(dialog, L"textBoxLeft")->Text = left;
             Field(dialog, L"textBoxRight")->Text = right;
+            Bitmap^ preview = gcnew Bitmap(dialog->Width, dialog->Height);
+            String^ directory = IO::Path::Combine(AppDomain::CurrentDomain->BaseDirectory, L"previews");
+            IO::Directory::CreateDirectory(directory);
+            dialog->DrawToBitmap(preview, Rectangle(0, 0, preview->Width, preview->Height));
+            preview->Save(IO::Path::Combine(directory, L"settings.png"));
+            delete preview;
             Field(dialog, L"textBoxAccuracy")->Text = accuracy;
+            safe_cast<CheckBox^>(Find(dialog, L"checkBoxFindAll"))->Checked = findAll;
             if (cancel)
             {
                 Click(dialog, L"buttonCancel");
@@ -210,76 +219,89 @@ namespace
             Application::DoEvents();
             auto degree = Choice(form, L"comboBoxDegree");
             auto method = Choice(form, L"comboBoxMethod");
-            auto result = Find(form, L"labelResult");
-            Check(!method->Visible && !Find(form, L"panelInterval")->Visible, "linear visibility");
-            SetCoefficients(form, L"Linear", gcnew cli::array<String^>{L"1e-300", L"1e300"});
-            Click(form, L"buttonSolve");
-            Check(result->Text->Contains(L"double") && degree->Enabled, "managed overflow not handled");
+            auto result = safe_cast<RichTextBox^>(Find(form, L"richTextBoxHistory"));
+            Check(Find(form, L"panelInterval")->Visible, "settings inaccessible for comparison");
+            Check(!Find(form, L"buttonGraph")->Enabled, "graph enabled before solving");
             SetCoefficients(form, L"Linear", gcnew cli::array<String^>{L"2", L"-4"});
             Click(form, L"buttonSolve");
-            Check(result->Text->Contains(L"x1 = 2"), "linear UI result");
-            Check(!degree->Enabled && Field(form, L"textBoxLinearA")->ReadOnly, "linear not locked");
+            Check(result->Text->Contains(L"x1 = 2"), "linear result missing");
+            Check(!degree->Enabled && Field(form, L"textBoxLinearA")->ReadOnly, "input not locked");
+            Check(Application::OpenForms[L"GraphForm"] == nullptr, "graph opened automatically");
+            Click(form, L"buttonGraph");
+            Form^ graph = Application::OpenForms[L"GraphForm"];
+            Check(graph != nullptr && Find(graph, L"graphPanel") != nullptr, "separate graph missing");
+            graph->Close();
+            delete graph;
+            int oldLength = result->TextLength;
             Click(form, L"buttonReset");
-            Check(degree->Enabled && !Field(form, L"textBoxLinearA")->ReadOnly, "reset not unlocked");
-            degree->SelectedIndex = 1;
-            Check(!Find(form, L"panelInterval")->Visible && !method->Visible, "quadratic settings visible");
-            SetCoefficients(form, L"Quadratic", gcnew cli::array<String^>{L"1", L"0", L"1"});
-            Click(form, L"buttonSolve");
-            Check(result->Text->Contains(L"i"), "complex UI result missing");
-            Click(form, L"buttonReset");
+            Check(result->TextLength == oldLength, "reset erased history");
             degree->SelectedIndex = 2;
-            Check(method->Visible && !Find(form, L"panelInterval")->Visible, "cubic method missing");
+            method->SelectedIndex = 1;
             SetCoefficients(form, L"Cube", gcnew cli::array<String^>{L"1", L"-6", L"11", L"-6"});
             Click(form, L"buttonSolve");
-            Check(result->Text->Contains(L"x3") && !method->Enabled, "Cardano UI or lock failed");
-            Click(form, L"buttonReset");
-            method->SelectedIndex = 1;
-            Check(Find(form, L"panelInterval")->Visible, "numerical fields hidden");
-            Check(Find(form, L"textBoxSearchStep") == nullptr, "step input still exists");
-            Check(Find(form, L"textBoxIntervalLeft") == nullptr, "main settings input still exists");
+            Check(result->Text->Contains(L"введите обе границы") && degree->Enabled,
+                  "numerical solve accepted missing interval");
+            EditSettings(form, L"-1", L"1", L"1e-9", true);
+            int beforeMissing = result->TextLength;
+            Click(form, L"buttonSolve");
+            Check(result->Text->Substring(beforeMissing)->Contains(L"введите обе границы"),
+                  "cancelled first settings allowed numerical solve");
             auto defaults = EditSettings(form, L"0", L"4", L"1e-9", false);
-            Check(defaults->initialAccuracy->Replace(L',', L'.') == L"0.000001",
-                  "default accuracy not displayed as decimal");
+            Check(defaults->initialLeft == L"", "interval not initially empty");
+            Check(defaults->initialAccuracy->Replace(L',', L'.') == L"0.000001", "accuracy format");
+            auto cancelled = EditSettings(form, L"20", L"30", L"0,5", true);
+            Check(cancelled->initialLeft == L"0", "settings not loaded");
+            auto reopened = EditSettings(form, L"20", L"30", L"0.5", true);
+            Check(reopened->initialLeft == L"0", "cancel changed settings");
+            Click(form, L"buttonSolve");
+            Check(result->Text->Contains(L"x3"), "multiple roots missing");
+            Check(result->Text->Contains(L"x1 = 2"), "old result disappeared");
+            result->Select(0, 1);
+            Check(result->SelectionColor == Color::DimGray, "old result not dimmed");
+            result->Select(result->TextLength - 3, 1);
+            Check(result->SelectionBackColor == Color::LightYellow, "latest result not highlighted");
+            Click(form, L"buttonReset");
+            SettingsDialogAction^ single = gcnew SettingsDialogAction(L"1,5", L"2,5", L"1e-9", false);
+            single->findAll = false;
+            single->timer->Start();
+            Click(form, L"buttonSearchSettings");
+            delete single->timer;
+            oldLength = result->TextLength;
+            Click(form, L"buttonSolve");
+            String^ last = result->Text->Substring(oldLength);
+            Check(last->Contains(L"один корень") && !last->Contains(L"x2 ="), "single mode returned several roots");
+            Click(form, L"buttonReset");
+            oldLength = result->TextLength;
+            Click(form, L"buttonCompare");
+            last = result->Text->Substring(oldLength);
+            Check(last->Contains(L"Аналитический метод") && last->Contains(L"Численный метод"),
+                  "comparison missing one method");
+            Check(last->Contains(L"x3"), "analytical comparison roots missing");
+            Click(form, L"buttonReset");
             EditSettings(form, L"0", L"4", L"0.000000000001", false);
             auto minimum = EditSettings(form, L"0", L"4", L"1e-9", false);
-            Check(minimum->initialAccuracy->Replace(L',', L'.') == L"0.000000000001",
-                  "minimum accuracy rounded to zero");
-            auto cancelled = EditSettings(form, L"20", L"30", L"0,5", true);
-            Check(cancelled->initialLeft == L"0", "saved settings not loaded");
-            auto reopened = EditSettings(form, L"20", L"30", L"0.5", true);
-            Check(reopened->initialLeft == L"0", "cancel changed saved settings");
+            Check(minimum->initialAccuracy->Replace(L',', L'.') == L"0.000000000001", "minimum accuracy rounded");
+            degree->SelectedIndex = 4;
+            Check(!Find(form, L"buttonCompare")->Visible, "quintic comparison available");
+            SetCoefficients(form, L"Fifth", gcnew cli::array<String^>{L"1", L"0", L"-5", L"0", L"4", L"0"});
+            EditSettings(form, L"-3", L"3", L"1e-9", false);
+            oldLength = result->TextLength;
             Click(form, L"buttonSolve");
-            Check(result->Text->Contains(L"x3"), "numerical multiple roots missing");
-            Check(!Find(form, L"buttonSearchSettings")->Enabled, "settings not locked");
+            Check(result->Text->Substring(oldLength)->Contains(L"x5"), "quintic roots missing");
             String^ directory = IO::Path::Combine(AppDomain::CurrentDomain->BaseDirectory, L"previews");
             IO::Directory::CreateDirectory(directory);
             Bitmap^ bitmap = gcnew Bitmap(form->Width, form->Height);
             form->DrawToBitmap(bitmap, Rectangle(0, 0, bitmap->Width, bitmap->Height));
-            bitmap->Save(IO::Path::Combine(directory, L"cubic-numerical.png"));
+            bitmap->Save(IO::Path::Combine(directory, L"history.png"));
             delete bitmap;
-            Click(form, L"buttonReset");
-            Check(Find(form, L"buttonSearchSettings")->Enabled, "settings not unlocked");
-            method->SelectedIndex = 0;
-            degree->SelectedIndex = 3;
-            SetCoefficients(form, L"Quartic", gcnew cli::array<String^>{L"1", L"0", L"0", L"1", L"1"});
-            Click(form, L"buttonSolve");
-            Check(result->Text->Contains(L"x4") && result->Text->Contains(L"i"), "Ferrari UI failed");
-            bitmap = gcnew Bitmap(form->Width, form->Height);
-            form->DrawToBitmap(bitmap, Rectangle(0, 0, bitmap->Width, bitmap->Height));
-            bitmap->Save(IO::Path::Combine(directory, L"quartic-analytical.png"));
+            Click(form, L"buttonGraph");
+            graph = Application::OpenForms[L"GraphForm"];
+            bitmap = gcnew Bitmap(graph->Width, graph->Height);
+            graph->DrawToBitmap(bitmap, Rectangle(0, 0, bitmap->Width, bitmap->Height));
+            bitmap->Save(IO::Path::Combine(directory, L"graph.png"));
             delete bitmap;
-            Click(form, L"buttonReset");
-            form->Size = Drawing::Size(800, 600);
-            degree->SelectedIndex = 4;
-            Check(!method->Visible && Find(form, L"panelInterval")->Visible, "fifth visibility");
-            SetCoefficients(form, L"Fifth", gcnew cli::array<String^>{L"1", L"0", L"-5", L"0", L"4", L"0"});
-            EditSettings(form, L"-3", L"3", L"0,000000001", false);
-            Click(form, L"buttonSolve");
-            Check(result->Text->Contains(L"x5"), "fifth roots missing");
-            bitmap = gcnew Bitmap(form->Width, form->Height);
-            form->DrawToBitmap(bitmap, Rectangle(0, 0, bitmap->Width, bitmap->Height));
-            bitmap->Save(IO::Path::Combine(directory, L"fifth-minimum.png"));
-            delete bitmap;
+            graph->Close();
+            delete graph;
         }
         finally
         {
@@ -677,6 +699,74 @@ int main()
          []
          {
              Check(HeaderCompileCheck() == 1, "header linkage failed");
+         });
+    Test("single bisection without scan", []
+    {
+        SearchSettings settings = Settings(1, 2, 0);
+        settings.findAll = false;
+        Roots(BisectionSolver(settings), {1, 0, -2}, {sqrt(2.0)});
+    });
+    Test("single bisection endpoint", []
+    {
+        SearchSettings settings = Settings(1, 3, 0);
+        settings.findAll = false;
+        Roots(BisectionSolver(settings), {1, -1}, {1});
+    });
+    Test("single bisection rejects same signs", []
+    {
+        Reject([]
+        {
+            SearchSettings settings = Settings(-2, 2, 0.1);
+            settings.findAll = false;
+            BisectionSolver(settings).Solve(Polynomial({1, 0, -1}));
+        });
+    });
+    Test("single bisection returns one of several roots", []
+    {
+        SearchSettings settings = Settings(0, 4, 0.1);
+        settings.findAll = false;
+        Solution result = BisectionSolver(settings).Solve(Polynomial({1, -6, 11, -6}));
+        Check(result.roots.size() == 1, "single mode returned several roots");
+    });
+    Test("empty bounds rejected", []
+    {
+        Reject([]
+        {
+            SearchSettings settings;
+            BisectionSolver solver(settings);
+        });
+    });
+    Test("single bisection ignores scan interval limit",
+         []
+         {
+             SearchSettings settings = Settings(0, 1000000, 0.1);
+             settings.findAll = false;
+             Roots(BisectionSolver(settings), {1, -500000}, {500000});
+         });
+    Test("empty interval field rejected",
+         []
+         {
+             Project1::SearchSettingsForm^ dialog = gcnew Project1::SearchSettingsForm();
+             try
+             {
+                 auto flags = System::Reflection::BindingFlags::Instance |
+                              System::Reflection::BindingFlags::NonPublic;
+                 auto method = dialog->GetType()->GetMethod(L"ReadNumber", flags);
+                 bool rejected = false;
+                 try
+                 {
+                     method->Invoke(dialog, gcnew cli::array<Object^>{Field(dialog, L"textBoxLeft"), L"Левая граница"});
+                 }
+                 catch (System::Reflection::TargetInvocationException^ error)
+                 {
+                     rejected = dynamic_cast<ArgumentException^>(error->InnerException) != nullptr;
+                 }
+                 Check(rejected, "blank bound accepted");
+             }
+             finally
+             {
+                 delete dialog;
+             }
          });
     Test("form methods, results, reset, input and layouts", UIFlow);
     cout << passed << " passed, " << failed << " failed\n";
